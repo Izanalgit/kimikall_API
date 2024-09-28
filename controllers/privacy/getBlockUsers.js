@@ -5,7 +5,7 @@ module.exports = async (req,res) => {
     
     const userId = req.user;
 
-    //Read messages
+    //Read block list
     try {
         const blockedUsers = await getBlockedUser(userId);
 

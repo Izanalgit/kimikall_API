@@ -1,5 +1,5 @@
 const {sendMessage} = require('../../services/messagesServices');
-const {dbFindUser} = require('../../services/userServices');
+const {dbFindUserId} = require('../../services/userServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -21,8 +21,8 @@ module.exports = async (req,res) => {
             .status(400)
             .json({messageErr:msgErr.errPayloadIncorrect});
 
-    //Receiver user get ID
-    const userRecept = await dbFindUser(recep);
+    //Receiver user check
+    const userRecept = await dbFindUserId(recep);
 
     if(!userRecept) 
         return res

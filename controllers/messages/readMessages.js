@@ -1,28 +1,26 @@
 const {readMessages} = require('../../services/messagesServices');
-const {dbFindUser} = require('../../services/userServices');
+const {dbFindUserId} = require('../../services/userServices');
 const {msgFormat} = require('../../utils/messageFormater');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
     
     const userId = req.user;
-    const contact = req.params.contact;
+    const contactId = req.params.contact;
 
     //Incorrect parameters
-    if(!contact)
+    if(!contactId)
         return res
             .status(400)
             .json({messageErr:msgErr.errParamsIncorrect});
 
     //Contact user get ID
-    const userContact = await dbFindUser(contact);
+    const userContact = await dbFindUserId(contactId);
 
     if(!userContact) 
         return res
             .status(401)
             .json({messageErr:msgErr.errUserNotFound('Contact')})
-     
-    const contactId = userContact._id;
 
     //Read messages
     try {
@@ -35,7 +33,9 @@ module.exports = async (req,res) => {
     
     } catch (err) {
         console.error('Error at read or format messages : ', err);
-        return res.status(500).json({ messageErr:msgErr.errGeneral('messages not found')});
+        return res
+            .status(500)
+            .json({ messageErr:msgErr.errGeneral('messages not found')});
     }
     
 };

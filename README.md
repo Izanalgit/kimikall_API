@@ -25,6 +25,7 @@ En construcción ...
     * PERFIL
         - UPLOAD PIC
         * DELETE PIC
+        * UPGRADE BIO
         * UPLOAD POST
         * EDIT POST
         + DELETE POST

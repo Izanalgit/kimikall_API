@@ -1,11 +1,12 @@
 const { body } = require('express-validator');
+const mongoose = require('mongoose');
 
 const addBlockedUserValidation = [
 	body('payload.blockUser')
         .trim()
         .notEmpty()
         .withMessage('Se requiere de un usuario para bloquear')
-        .isEmail()
+        .custom(id => mongoose.isValidObjectId(id))
         .withMessage('El usuario debe ser un email válido'),
 ]
 
@@ -14,7 +15,7 @@ const removeBlockedUserValidaiton = [
         .trim()
         .notEmpty()
         .withMessage('Se requiere de un usuario para desbloquear')
-        .isEmail()
+        .custom(id => mongoose.isValidObjectId(id))
         .withMessage('El usuario debe ser un email válido'),
 ]
 

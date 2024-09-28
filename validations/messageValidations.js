@@ -1,11 +1,12 @@
 const { body } = require('express-validator');
+const mongoose = require('mongoose');
 
 const messageValidation = [
 	body('payload.recep')
         .trim()
         .notEmpty()
         .withMessage('Se requiere de un usuario receptor para el mensaje')
-        .isEmail()
+        .custom(id => mongoose.isValidObjectId(id))
         .withMessage('El usuario receptor debe ser un email válido'),
     body('payload.message')
         .trim()

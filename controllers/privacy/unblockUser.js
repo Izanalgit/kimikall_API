@@ -1,5 +1,5 @@
 const {removeBlockedUser} = require('../../services/privacyServices');
-const {dbFindUser} = require('../../services/userServices');
+const {dbFindUserId} = require('../../services/userServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -21,8 +21,8 @@ module.exports = async (req,res) => {
             .status(400)
             .json({messageErr:msgErr.errPayloadIncorrect});
 
-    //User to unblock get ID
-    const unblockUserObj = await dbFindUser(unblockUser);
+    //User to unblock check ID
+    const unblockUserObj = await dbFindUserId(unblockUser);
 
     if(!unblockUserObj) 
         return res

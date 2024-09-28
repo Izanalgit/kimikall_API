@@ -14,12 +14,14 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
 
     const user0 = {name:"Random22",email:"www.random@probe.com",pswd:"12wABCabc!"};
     const user1 = {name:"Jhon117",email:"www.spartan@probe.com",pswd:"12wABCabc!"};
-    const message = {payload:{recep:user0.email,message:"Hello Master Chief"}};
-    const toBlock = {payload:{blockUser:user1.email}};
-    const toUnBlock = {payload:{unblockUser:user1.email}};
-
+    
     let user0Id;
     let user1Id;
+
+    let message;
+    let toBlock;
+    let toUnBlock;
+    
     let tokenAuth0;
     let tokenAuth1;
 
@@ -32,6 +34,10 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
 
         user0Id = user0Obj._id;
         user1Id = user1Obj._id;
+
+        message = {payload:{recep:user0Id,message:"Hello Master Chief"}};
+        toBlock = {payload:{blockUser:user1Id}};
+        toUnBlock = {payload:{unblockUser:user1Id}};
 
         tokenAuth0 = genToken(user0Id);
         tokenAuth1 = genToken(user1Id);

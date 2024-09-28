@@ -14,10 +14,12 @@ describe('TEST OF MESSAGES END ROUTES',()=>{
 
     const user0 = {name:"Random22",email:"www.random@probe.com",pswd:"12wABCabc!"};
     const user1 = {name:"Jhon117",email:"www.spartan@probe.com",pswd:"12wABCabc!"};
-    const message = {payload:{recep:"www.spartan@probe.com",message:"Hello Master Chief"}};
-
+    
     let user0Id;
     let user1Id;
+
+    let message;
+
     let tokenAuth;
 
     beforeAll(async () => {
@@ -29,6 +31,8 @@ describe('TEST OF MESSAGES END ROUTES',()=>{
 
         user0Id = user0Obj._id;
         user1Id = user1Obj._id;
+
+        message = {payload:{recep:user1Id,message:"Hello Master Chief"}};
 
         tokenAuth = genToken(user0Id);
         
@@ -50,7 +54,7 @@ describe('TEST OF MESSAGES END ROUTES',()=>{
     it('READ : Should read the messages',async ()=>{
 
         await agent
-            .get(`/api/chat/read/${user1.email}`)
+            .get(`/api/chat/read/${user1Id}`)
             .set('Authorization', tokenAuth)
             .expect(200)
             .expect((res)=>{

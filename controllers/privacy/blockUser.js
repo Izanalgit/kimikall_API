@@ -1,5 +1,5 @@
 const {addBlockedUser} = require('../../services/privacyServices');
-const {dbFindUser} = require('../../services/userServices');
+const {dbFindUserId} = require('../../services/userServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -21,8 +21,8 @@ module.exports = async (req,res) => {
             .status(400)
             .json({messageErr:msgErr.errPayloadIncorrect});
 
-    //User to block get ID
-    const blockUserObj = await dbFindUser(blockUser);
+    //User to block check ID
+    const blockUserObj = await dbFindUserId(blockUser);
 
     if(!blockUserObj) 
         return res
