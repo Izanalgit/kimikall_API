@@ -16,7 +16,7 @@ dbConnect();
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
-//LOGER
+//LOGGER
 app.use(morgan('dev'));
 
 //HEALTH

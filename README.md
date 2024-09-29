@@ -22,13 +22,14 @@ En construcción ...
     * ACCES
         - LOG IN
         + LOG OUT
-    * PERFIL
-        - UPLOAD PIC
-        * DELETE PIC
-        * UPGRADE BIO
-        * UPLOAD POST
-        * EDIT POST
-        + DELETE POST
+    * PRORFIL
+        - CREATE PROFIL
+        * UPDATE PROFIL
+        + GET PROFIL
+    * CONTACT
+        - ADD CONTACT
+        * DELTE CONTACT
+        + GET CONTACTS
     + APP DIALOG
         - TICKETS
 * ADMIN
