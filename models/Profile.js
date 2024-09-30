@@ -12,7 +12,13 @@ const profileSchema = new mongoose.Schema({
     profilePicture : {
         type:String,
     },
+    profilePictureId : {
+        type:String,
+    },
     coverPhoto : {
+        type:String,
+    },
+    coverPhotoId : {
         type:String,
     },
     

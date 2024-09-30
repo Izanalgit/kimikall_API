@@ -25,6 +25,7 @@ En construcción ...
     * PRORFIL
         - CREATE PROFIL
         * UPDATE PROFIL
+        * UPLOAD IMAGE PROFILE
         + GET PROFIL
     * CONTACT
         - ADD CONTACT
