@@ -53,7 +53,7 @@ module.exports = async (req,res) => {
             imageUrl = result.url;
             publicId = result.publicId;
 
-            // Update profile objt with new image fields
+            // Update profile objt with new image fields (MUST CHECK IF WORKS WITH NO FIELD)
             profile.profilePicture = imageUrl;
             profile.profilePictureId = publicId;
 
@@ -69,7 +69,7 @@ module.exports = async (req,res) => {
             imageUrl = result.url;
             publicId = result.publicId;
 
-            // Update profile objt with new image fields
+            // Update profile objt with new image fields (MUST CHECK IF WORKS WITH NO FIELD)
             profile.coverPhoto = imageUrl;
             profile.coverPhotoId = publicId;
 
