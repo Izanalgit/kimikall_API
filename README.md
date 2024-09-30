@@ -23,8 +23,7 @@ En construcción ...
         - LOG IN
         + LOG OUT
     * PRORFIL
-        - CREATE PROFIL
-        * UPDATE PROFIL
+        - UPDATE PROFIL
         * UPLOAD IMAGE PROFILE
         + GET PROFIL
     * CONTACT
