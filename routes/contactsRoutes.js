@@ -1,8 +1,8 @@
 const express = require('express');
 
-const addContact = require('../controllers/profile/getProfile');
-const deleteContact = require('../controllers/profile/imageProfile');
-const getContactList = require('../controllers/profile/updateProfile');
+const addContact = require('../controllers/contacts/addContact');
+const deleteContact = require('../controllers/contacts/deleteContact');
+const getContactList = require('../controllers/contacts/getContacts');
 
 const {verifyToken} = require('../middleware/authToken');
 

@@ -15,7 +15,7 @@ async function dbCreateContactDocument(userId) {
 async function addContactUser (userId, contactUserId){
     try{
         await Contact.findOneAndUpdate({userId},{
-            $addToSet: {contacts : contactUserId}
+            $addToSet: {contacts : { contactId: contactUserId }}
         })
     }catch (err){
         console.error('DB-ADD CONTACT USER ERROR : ',err);
@@ -27,7 +27,7 @@ async function addContactUser (userId, contactUserId){
 async function removeContactUser (userId, contactUserId) {
     try{
         await Contact.findOneAndUpdate({userId},{
-            $pull: {contacts : contactUserId}
+            $pull: {contacts : { contactId: contactUserId }}
         })
     }catch (err){
         console.error('DB-REMOVE CONTACT USERS ERROR : ',err);
@@ -46,9 +46,20 @@ async function getContactList(userId) {
     }
 }
 
+//Delete contacts user list
+async function deleteContactList(userId) {
+    try{
+        await Contact.findOneAndDelete({userId});
+    }catch (err){
+        console.error('DB-DELETE CONTACT USER LIST ERROR : ',err);
+        throw new Error ('ERROR : can not delete contact user list');
+    }
+}
+
 module.exports = {
     dbCreateContactDocument,
     addContactUser,
     removeContactUser,
-    getContactList
+    getContactList,
+    deleteContactList
 }

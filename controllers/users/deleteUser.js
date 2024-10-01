@@ -1,4 +1,6 @@
 const {dbFindUserLogIn , dbDeleteUser} = require('../../services/userServices');
+const {dbDeleteProfile} = require('../../services/profileServices.js');
+const {deleteContactList} = require('../../services/contactsServices.js');
 const {cleanToken} = require('../../services/tokenServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
@@ -20,27 +22,26 @@ module.exports = async (req,res) => {
             .status(401)
             .json({messageErr:msgErr.errUserNotFound()})
     }
-    
-    //Delete user
-    const userDel = await dbDeleteUser(userId);
-    if(!userDel)
-        return res
-            .status(401)
-            .json({messageErr:msgErr.errGeneral('user not deleted')});
 
-
-    //Log
-    console.log(userDel.name,' deleted'); //IMPROVE!
-    
-    //Destroy session
     try{
-        await cleanToken(userId)
-    }catch(err){
-        return res
-            .status(401)
-            .json({messageErr:err});
-    }
+        //Delete user
+        const userDel = await dbDeleteUser(userId);
 
-    res.status(200)
-        .json({message:`Farewell ${user.name}!`});
+        await cleanToken(userId);
+        await dbDeleteProfile(userId);
+        await deleteContactList(userId);
+
+        //Log
+        console.log(userDel.name,' deleted'); //IMPROVE!
+
+        return res
+            .status(200)
+            .json({message:`Farewell ${userDel.name}!`});
+
+    }catch(err){
+        console.error('ERROR : DELETE USER : ',err);
+        return res
+            .status(500)
+            .json({messageErr:msgErr.errGeneral('user not deleted')});
+    }
 }

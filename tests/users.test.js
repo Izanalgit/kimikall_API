@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const {app,server} = require('../app.js');
 
 const {dbFindUser,dbDeleteUser} = require('../services/userServices.js');
+const {dbDeleteProfile} = require('../services/profileServices.js');
+const {deleteContactList} = require('../services/contactsServices.js');
 const {cleanToken} = require('../services/tokenServices.js');
 
 const agent = request.agent(app);
@@ -89,6 +91,8 @@ describe('TEST OF CRUD AND LOGIN USERS END ROUTES',()=>{
         const user = await dbFindUser(payload.payload.email);
         if (user) {
             await dbDeleteUser(user._id);
+            await dbDeleteProfile(user._id);
+            await deleteContactList(user._id);
             await cleanToken(user._id);
         }
 

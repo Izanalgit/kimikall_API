@@ -33,7 +33,7 @@ module.exports = async (req,res) => {
             .status(500)
             .json({messageErr:msgErr.errToken});
 
-    console.log('SESSION UPDATED - LOGOUT : ', userId);
+    console.log('SESSION UPDATED - LOGOUT : ', user.name);
 
     res
         .status(200)
