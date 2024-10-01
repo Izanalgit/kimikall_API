@@ -22,7 +22,7 @@ module.exports = async (req,res) => {
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});
 
-        //User to block check ID
+        //User to remove from contacts check ID
         const removeContactObj = await dbFindUserId(removeContact);
 
         if(!removeContactObj) 
