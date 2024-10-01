@@ -6,24 +6,16 @@ module.exports = async (req,res) => {
     try {
         const userId = req.user;
         const file = req.file;
-        const payload = req.body.payload;
+        const imageType = req.params.imageType;
 
         let imageUrl;
         let publicId;
 
-        //No payload
-        if(!payload)
+        //Incorrect parameter
+        if(imageType !== 'profile' && imageType !== 'cover')
             return res
-                .status(400)
-                .json({messageErr:msgErr.errPayloadRequired});
-
-        const {imageType} = payload;
-
-        //Incorrect payload
-        if(!imageType)
-            return res
-                .status(400)
-                .json({messageErr:msgErr.errPayloadIncorrect});
+                .status(408)
+                .json({messageErr:msgErr.errParamsIncorrect});
 
         //No image
         if (!file)
@@ -53,7 +45,7 @@ module.exports = async (req,res) => {
             imageUrl = result.url;
             publicId = result.publicId;
 
-            // Update profile objt with new image fields (MUST CHECK IF WORKS WITH NO FIELD)
+            // Update profile objt with new image fields
             profile.profilePicture = imageUrl;
             profile.profilePictureId = publicId;
 
@@ -69,7 +61,7 @@ module.exports = async (req,res) => {
             imageUrl = result.url;
             publicId = result.publicId;
 
-            // Update profile objt with new image fields (MUST CHECK IF WORKS WITH NO FIELD)
+            // Update profile objt with new image fields
             profile.coverPhoto = imageUrl;
             profile.coverPhotoId = publicId;
 

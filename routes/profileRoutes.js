@@ -10,11 +10,11 @@ const {upload} = require('../middleware/uploader');
 
 const router = express.Router();
 
-router.get('/read/:contact', verifyToken, getProfile);
+router.get('/', verifyToken, getProfile);
 
-router.put('/image', verifyToken, upload.single('image'), imageProfile);
+router.post('/image/:imageType', verifyToken, upload.single('image'), imageProfile);
 
-router.post('/send', verifyToken, updateProfile);
+router.post('/bio', verifyToken, updateProfile);
 
 
 module.exports = router;

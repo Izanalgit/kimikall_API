@@ -9,7 +9,7 @@ const {genToken} = require('../utils/jwtAuth.js');
 
 const agent = request.agent(app);
 
-describe('TEST OF MESSAGES END ROUTES',()=>{
+describe('TEST OF CONTACTS END ROUTES',()=>{
 
     const user0 = {name:"Random22",email:"www.random@probe.com",pswd:"12wABCabc!"};
     const user1 = {name:"Jhon117",email:"www.spartan@probe.com",pswd:"12wABCabc!"};

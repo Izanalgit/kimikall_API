@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const DB = process.env.MONGO_BBDD || 'chat-module';
+const DB = process.env.MONGO_BBDD || 'kmkall-bbdd';
 const URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/';
 
 // DB Connection
