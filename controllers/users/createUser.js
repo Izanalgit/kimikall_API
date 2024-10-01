@@ -1,10 +1,16 @@
 const {dbCreateUser} = require('../../services/userServices');
+const {dbCreateProfile} = require('../../services/profileServices');
+const {dbCreateContactDocument} = require('../../services/contactsServices');
 const {passHasher} = require('../../utils/passwordHasher');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports =async (req,res)=>{
-    let newUser;
+    
     const payload = req.body.payload;
+    
+    let newUser;
+    let newProfile;
+    let newContactsDoc;
 
     //Logued check
     const sessionToken = req.user; 
@@ -30,15 +36,21 @@ module.exports =async (req,res)=>{
     //Create new user
     try{
         const hashedPaswd = await passHasher(pswd); //hash user password
-        newUser = await dbCreateUser({name,email,pswd:hashedPaswd})
+        newUser = await dbCreateUser({name,email,pswd:hashedPaswd});
+
+        const newUserId = newUser._id;
+        newProfile = await dbCreateProfile(newUserId);
+        newContactsDoc = await dbCreateContactDocument(newUserId);
+
     }catch(err){
+        console.error('ERROR : CREATE USER : ',err);
         return res
             .status(401)
             .json({messageErr:err})        
     }
 
     //Check created user
-    if(!newUser) 
+    if(!newUser || !newProfile || !newContactsDoc) 
         return res
             .status(500)
             .json({messageErr:msgErr.errApiInternal});

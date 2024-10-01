@@ -1,9 +1,9 @@
 const Profile = require('../models/Profile');
 
 //Create
-async function dbCreateProfile(profile){
+async function dbCreateProfile(userId){
     try{
-        const newProfile = await Profile.create({...profile});
+        const newProfile = await Profile.create({userId});
         return newProfile;
     }catch (err){
         console.error('DB-CREATE PROFILE ERROR : ',err);

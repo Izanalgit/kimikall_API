@@ -3,8 +3,8 @@ const Contact = require('../models/Contact');
 //Creates contacts documents of user
 async function dbCreateContactDocument(userId) {
     try {
-        const newContact = await Contact.create({ userId, contacts: [] });
-        return newContact;
+        const newContactsDoc = await Contact.create({ userId, contacts: [] });
+        return newContactsDoc;
     } catch (err) {
         console.error('DB-CREATE CONTACT DOCUMENT ERROR : ', err);
         throw new Error('ERROR : can not create contact document');
