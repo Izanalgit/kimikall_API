@@ -14,10 +14,10 @@ module.exports = async (req,res) => {
                 .status(400)
                 .json({messageErr:msgErr.errPayloadRequired});
 
-        const {bio} = payload;
+        const {bio,special} = payload;
 
         //Incorrect payload
-        if(!bio)
+        if(!bio && !special)
             return res
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});
@@ -31,18 +31,18 @@ module.exports = async (req,res) => {
                 .status(401)
                 .json({messageErr:msgErr.errUserNotFound('Profile')});
 
-        //Update bio profile
-    
+        //Update user profile
+        userProfile.special = special;  //Take atention if can it delete with [] !! 
         userProfile.bio = bio;
 
         const updatedProfile = await dbUpdateProfile(userId,userProfile);
         
         return res
             .status(200)
-            .json({ message: 'Bio updated successfully', updatedProfile });
+            .json({ message: 'Profile updated successfully', updatedProfile });
         
     }catch(err){
-        msgErr.errConsole(userId,'UPDATE BIO', err);
+        msgErr.errConsole(userId,'UPDATE PROFILE', err);
         return res
             .status(500)
             .json({messageErr:msgErr.errDbInvalidInput});

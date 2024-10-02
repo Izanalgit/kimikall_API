@@ -41,6 +41,7 @@ describe('TEST OF PROFILE END ROUTES',()=>{
     const user1 = {name:"Jhon117",email:"www.spartan@probe.com",pswd:"12wABCabc!"};
 
     const bioToUpdate = {payload:{bio:'The master chief'}};
+    const specialToUpdate = {payload:{special:['A','C']}};
 
     let user0Id;
     let user1Id;
@@ -74,6 +75,20 @@ describe('TEST OF PROFILE END ROUTES',()=>{
             .expect ((res)=>{
                 expect(res.body.message).toBeDefined();
                 expect(res.body.updatedProfile.bio).toBe(bioToUpdate.payload.bio);
+            })
+    })
+
+    it('SPECIAL : Should upload special to user profile', async ()=>{
+
+        await agent
+            .post('/api/profile/bio')
+            .set('Authorization', tokenAuth)
+            .send(specialToUpdate)
+            .expect(200)
+            .expect ((res)=>{
+                expect(res.body.message).toBeDefined();
+                expect(res.body.updatedProfile.special)
+                    .toStrictEqual(specialToUpdate.payload.special);
             })
     })
 
