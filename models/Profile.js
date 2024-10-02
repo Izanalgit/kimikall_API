@@ -6,6 +6,19 @@ const profileSchema = new mongoose.Schema({
         require: true,
         unique:true
     },
+    special : [{
+        type: String,
+        enum : {
+            values : [
+                'A',
+                'B',
+                'C',
+                'D',
+                'F'
+            ],
+            message : '{VALUE} is not available'
+        }
+    }],
     bio : {
         type:String,
     },
