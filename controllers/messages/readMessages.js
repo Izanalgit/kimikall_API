@@ -8,22 +8,22 @@ module.exports = async (req,res) => {
     const userId = req.user;
     const contactId = req.params.contact;
 
-    //Incorrect parameters
-    if(!contactId)
-        return res
-            .status(400)
-            .json({messageErr:msgErr.errParamsIncorrect});
-
-    //Contact user get ID
-    const userContact = await dbFindUserId(contactId);
-
-    if(!userContact) 
-        return res
-            .status(401)
-            .json({messageErr:msgErr.errUserNotFound('Contact')})
-
-    //Read messages
     try {
+        //Incorrect parameters
+        if(!contactId)
+            return res
+                .status(400)
+                .json({messageErr:msgErr.errParamsIncorrect});
+
+        //Contact user get ID
+        const userContact = await dbFindUserId(contactId);
+
+        if(!userContact) 
+            return res
+                .status(401)
+                .json({messageErr:msgErr.errUserNotFound('Contact')})
+
+        //Read messages
         const messagesRaw = await readMessages(userId, contactId);
         const messages = await msgFormat(userId, contactId, messagesRaw);
     
@@ -32,7 +32,7 @@ module.exports = async (req,res) => {
             .json({ messages });
     
     } catch (err) {
-        console.error('Error at read or format messages : ', err);
+        msgErr.errConsole(userId,'READ MESSAGES', err);
         return res
             .status(500)
             .json({ messageErr:msgErr.errGeneral('messages not found')});

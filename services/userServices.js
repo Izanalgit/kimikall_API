@@ -7,8 +7,8 @@ async function dbCreateUser(user){
         const newUser = await User.create({...user});
         return newUser;
     }catch (err){
-        console.error('DB-CREATE USER ERROR : ',err);
-        throw new Error ('ERROR : can not create new user');
+        console.error('ERROR : DB-CREATE USER : ',err);
+        throw new Error ('can not create new user');
     }
 }
 
@@ -18,8 +18,8 @@ async function dbFindUsers(){
         const allUser = await User.find();
         return allUser;
     }catch (err){
-        console.error('DB-FIND USERS ERROR : ',err);
-        throw new Error ('ERROR : can not find users');
+        console.error('ERROR : DB-FIND USERS : ',err);
+        throw new Error ('can not find users');
     }
 }
 
@@ -29,8 +29,8 @@ async function dbFindUserId(id){
         const user = await User.findById(id);
         return user;
     }catch (err){
-        console.error('DB-FIND USER BY ID ERROR : ',err);
-        throw new Error ('ERROR : can not find that user');
+        console.error('ERROR : DB-FIND USER BY ID : ',err);
+        throw new Error ('can not find that user');
     }
 }
 
@@ -40,8 +40,8 @@ async function dbFindUser(userEmail){
         const user = await User.findOne({email:userEmail});
         return user;
     }catch (err){
-        console.error('DB-FIND USER BY EMAIL ERROR : ',err);
-        throw new Error ('ERROR : can not find that user');
+        console.error('ERROR : DB-FIND USER BY EMAIL : ',err);
+        throw new Error ('can not find that user');
     }
 }
 
@@ -55,8 +55,8 @@ async function dbFindUserLogIn(userEmail,password){
             return user;
         
     }catch (err){
-        console.error('DB-FIND USER BY LOGIN ERROR : ',err);
-        throw new Error ('ERROR : can not find that user');
+        console.error('ERROR : DB-FIND USER BY LOGIN : ',err);
+        throw new Error ('can not find that user');
     }
 }
 
@@ -66,8 +66,8 @@ async function dbUpdateUser(id,user){
         const updtUser = await User.findByIdAndUpdate(id,user,{new:true});
         return updtUser;
     }catch (err){
-        console.error('DB-UPDATE USER BY ID ERROR : ',err);
-        throw new Error ('ERROR : can not update that user');
+        console.error('ERROR : DB-UPDATE USER BY ID : ',err);
+        throw new Error ('can not update that user');
     }
 }
 
@@ -77,8 +77,8 @@ async function dbDeleteUser(id){
         const delUser = await User.findByIdAndDelete(id);
         return delUser;
     }catch (err){
-        console.error('DB-DELETE USER BY ID ERROR : ',err);
-        throw new Error ('ERROR : can not delete that user');
+        console.error('ERROR : DB-DELETE USER BY ID : ',err);
+        throw new Error ('can not delete that user');
     }
 }
 

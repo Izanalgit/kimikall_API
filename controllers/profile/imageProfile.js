@@ -3,25 +3,27 @@ const {uploadImage,deleteImage} = require('../../services/imagesServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
-    try {
-        const userId = req.user;
-        const file = req.file;
-        const imageType = req.params.imageType;
+    
+    const userId = req.user;
+    const file = req.file;
+    const imageType = req.params.imageType;
 
-        let imageUrl;
-        let publicId;
+    let imageUrl;
+    let publicId;
+
+    try {
 
         //Incorrect parameter
         if(imageType !== 'profile' && imageType !== 'cover')
             return res
-                .status(408)
+                .status(400)
                 .json({messageErr:msgErr.errParamsIncorrect});
 
         //No image
         if (!file)
             return res
                 .status(400)
-                .json({ messageErr: 'No file uploaded' });
+                .json({ messageErr:msgErr.errGeneral('No file uploaded') });
 
         //Check and get user profile
         const profile = await dbFindProfile(userId);
@@ -65,11 +67,7 @@ module.exports = async (req,res) => {
             profile.coverPhoto = imageUrl;
             profile.coverPhotoId = publicId;
 
-        } else
-            return res
-                .status(400)
-                .json({ messageErr: 'Invalid image type' });
-
+        }
         
         // Update user profile
         const updatedProfile = await dbUpdateProfile(userId,profile);
@@ -80,10 +78,9 @@ module.exports = async (req,res) => {
                 .json({ message: 'Image updated successfully', updatedProfile });
     
     } catch (err) {
-
-        console.error('ERROR : UPDATE IMAGE : ', err);
+        msgErr.errConsole(userId,'UPDATE IMAGE', err);
         return res
             .status(500)
-            .json({ messageErr: 'Error updating image' });
+            .json({ messageErr:msgErr.errUpdateFile('image') });
     }
 };

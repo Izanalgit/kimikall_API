@@ -6,8 +6,8 @@ async function saveToken(userId,token){
         const authToken = await Token.create({userId,token});
         return authToken;
     }catch (err){
-        console.error('DB-SAVE TOKEN ERROR : ', err.errmsg);
-        throw new Error ('ERROR : can not save that token');
+        console.error('ERROR : DB-SAVE TOKEN : ', err.errmsg);
+        throw new Error ('can not save that token');
     }
 }
 
@@ -17,8 +17,8 @@ async function findToken(userId){
         const authToken = await Token.findOne({userId});
         return authToken;
     }catch (err){
-        console.error('DB-FIND TOKEN ERROR : ',err.errmsg);
-        throw new Error ('ERROR : can not find that token');
+        console.error('ERROR : DB-FIND TOKEN : ',err.errmsg);
+        throw new Error ('can not find that token');
     }
 }
 
@@ -28,8 +28,8 @@ async function cleanToken(userId){
         const authToken = await Token.findOneAndDelete({userId});
         return authToken;
     }catch (err){
-        console.error('DB-CLEAN TOKEN ERROR : ', err.errmsg);
-        throw new Error ('ERROR : can not clean that token');
+        console.error('ERROR : DB-CLEAN TOKEN : ', err.errmsg);
+        throw new Error ('can not clean that token');
     }
 }
 

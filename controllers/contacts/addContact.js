@@ -3,10 +3,11 @@ const {dbFindUserId} = require('../../services/userServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
-    try{
+    
+    const userId = req.user;
+    const payload = req.body.payload;
 
-        const userId = req.user;
-        const payload = req.body.payload;
+    try{
 
         //No payload
         if(!payload)
@@ -39,10 +40,10 @@ module.exports = async (req,res) => {
             .status(200)
             .json({message:'User added successfully'});
 
-    }catch(err){
-        console.error('ERROR : ADD CONTACT : ',err)
+    }catch (err) {
+        msgErr.errConsole(userId,'ADD CONTACT', err);
         return res
             .status(500)
-            .json({messageErr:msgErr.errDbInvalidInput});
+            .json({messageErr:msgErr.errApiInternal});
     }    
 };

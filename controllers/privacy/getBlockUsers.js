@@ -1,11 +1,10 @@
 const {getBlockedUser} = require('../../services/privacyServices');
-// const {msgErr} = require('../../utils/errorsMessages');
+const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
     
     const userId = req.user;
 
-    //Read block list
     try {
         const blockedUsers = await getBlockedUser(userId);
 
@@ -19,9 +18,10 @@ module.exports = async (req,res) => {
             .json({blockedUsers});
     
     } catch (err) {
+        msgErr.errConsole(userId,'GET BLOCK LIST', err);
         return res
             .status(500)
-            .json({ messageErr:err});
+            .json({messageErr:msgErr.errApiInternal});
     }
     
 };

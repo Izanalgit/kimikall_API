@@ -13,7 +13,7 @@ const uploadImage = async (filePath, folder) => {
 
     } catch (err) {
         console.error('ERROR : UPLOAD IMAGE : ', err);
-        throw new Error('Error uploading image to Cloudinary');
+        throw new Error('uploading image to Cloudinary');
     }
   };
 
@@ -23,7 +23,7 @@ const deleteImage = async (publicId) => {
         await cloudinary.uploader.destroy(publicId);
     } catch (err) {
         console.error('ERROR : DELETE IMAGE : ', err);
-        throw new Error('Error deleting image from Cloudinary');
+        throw new Error('deleting image from Cloudinary');
     }
 };
   

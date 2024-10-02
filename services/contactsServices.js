@@ -6,8 +6,8 @@ async function dbCreateContactDocument(userId) {
         const newContactsDoc = await Contact.create({ userId, contacts: [] });
         return newContactsDoc;
     } catch (err) {
-        console.error('DB-CREATE CONTACT DOCUMENT ERROR : ', err);
-        throw new Error('ERROR : can not create contact document');
+        console.error('ERROR : DB-CREATE CONTACT DOCUMENT : ', err);
+        throw new Error('can not create contact document');
     }
 }
 
@@ -18,8 +18,8 @@ async function addContactUser (userId, contactUserId){
             $addToSet: {contacts : { contactId: contactUserId }}
         })
     }catch (err){
-        console.error('DB-ADD CONTACT USER ERROR : ',err);
-        throw new Error ('ERROR : can not add that user contact');
+        console.error('ERROR : DB-ADD CONTACT USER : ',err);
+        throw new Error ('can not add that user contact');
     }
 }
 
@@ -30,8 +30,8 @@ async function removeContactUser (userId, contactUserId) {
             $pull: {contacts : { contactId: contactUserId }}
         })
     }catch (err){
-        console.error('DB-REMOVE CONTACT USERS ERROR : ',err);
-        throw new Error ('ERROR : can not remove that user contact');
+        console.error('ERROR : DB-REMOVE CONTACT USERS : ',err);
+        throw new Error ('can not remove that user contact');
     }
 }
 
@@ -41,8 +41,8 @@ async function getContactList(userId) {
         const userContacts = await Contact.findOne({userId});
         return userContacts.contacts;
     }catch (err){
-        console.error('DB-GET CONTACT USER LIST ERROR : ',err);
-        throw new Error ('ERROR : can not get contact user list');
+        console.error('ERROR : DB-GET CONTACT USER LIST : ',err);
+        throw new Error ('can not get contact user list');
     }
 }
 
@@ -51,8 +51,8 @@ async function deleteContactList(userId) {
     try{
         await Contact.findOneAndDelete({userId});
     }catch (err){
-        console.error('DB-DELETE CONTACT USER LIST ERROR : ',err);
-        throw new Error ('ERROR : can not delete contact user list');
+        console.error('ERROR : DB-DELETE CONTACT USER LIST :',err);
+        throw new Error ('can not delete contact user list');
     }
 }
 

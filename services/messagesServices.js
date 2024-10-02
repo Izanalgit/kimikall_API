@@ -12,7 +12,7 @@ async function sendMessage(remit,recep,messageText) {
     ]);
 
     if(blockRemit.blockedUsers.includes(recep) || blockRecep.blockedUsers.includes(remit))
-        throw new Error ('ERROR : can not send message to that user');
+        throw new Error ('can not send message to that user');
 
     //Send message
     const messageObjt = {remit,recep,messageText}
@@ -22,8 +22,8 @@ async function sendMessage(remit,recep,messageText) {
         return newMessage;
 
     }catch (err){
-        console.error('DB-SEND MESSAGE ERROR : ',err);
-        throw new Error ('ERROR : can not send new message');
+        console.error('ERROR : DB-SEND MESSAGE : ',err);
+        throw new Error ('can not send new message');
     }
 }
 
@@ -33,7 +33,7 @@ async function readMessages(userID0,userID1) {
     try{
 
         if (!userID0 || !userID1) {
-            throw new Error('ERROR : Invalid user IDs on read messages');
+            throw new Error('Invalid user IDs on read messages');
         }
 
         const messages = await Message.find({
@@ -52,8 +52,8 @@ async function readMessages(userID0,userID1) {
         return decryptedMessages;
 
     }catch (err){
-        console.error('DB-READ MESSAGES ERROR : ',err);
-        throw new Error ('ERROR : can not read messages');
+        console.error('ERROR : DB-READ MESSAGES : ',err);
+        throw new Error ('can not read messages');
     }
 }
 

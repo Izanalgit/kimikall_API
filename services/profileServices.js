@@ -6,8 +6,8 @@ async function dbCreateProfile(userId){
         const newProfile = await Profile.create({userId});
         return newProfile;
     }catch (err){
-        console.error('DB-CREATE PROFILE ERROR : ',err);
-        throw new Error ('ERROR : can not create new profile');
+        console.error('ERROR : DB-CREATE PROFILE : ',err);
+        throw new Error ('can not create new profile');
     }
 }
 
@@ -17,8 +17,8 @@ async function dbFindProfileId(id){
         const profile = await Profile.findById(id);
         return profile;
     }catch (err){
-        console.error('DB-FIND PROFILE ERROR : ',err);
-        throw new Error ('ERROR : can not find that profile');
+        console.error('ERROR : DB-FIND PROFILE : ',err);
+        throw new Error ('can not find that profile');
     }
 }
 
@@ -28,8 +28,8 @@ async function dbFindProfile(userId){
         const profile = await Profile.findOne({userId});
         return profile;
     }catch (err){
-        console.error('DB-FIND PROFILE BY USER ID ERROR : ',err);
-        throw new Error ('ERROR : can not find that profile');
+        console.error('ERROR : DB-FIND PROFILE BY USER ID : ',err);
+        throw new Error ('can not find that profile');
     }
 }
 
@@ -39,8 +39,8 @@ async function dbUpdateProfile(userId,profile){
         const updtProfile = await Profile.findOneAndUpdate({userId}, profile, {new: true});
         return updtProfile;
     }catch (err){
-        console.error('DB-UPDATE PROFILE ERROR : ',err);
-        throw new Error ('ERROR : can not update that profile');
+        console.error('ERROR : DB-UPDATE PROFILE : ',err);
+        throw new Error ('can not update that profile');
     }
 }
 
@@ -50,8 +50,8 @@ async function dbDeleteProfile(userId){
         const delProfile = await Profile.findOneAndDelete({ userId });
         return delProfile;
     }catch (err){
-        console.error('DB-DELETE PROFILE ERROR : ',err);
-        throw new Error ('ERROR : can not delete that profile');
+        console.error('ERROR : DB-DELETE PROFILE : ',err);
+        throw new Error ('can not delete that profile');
     }
 }
 

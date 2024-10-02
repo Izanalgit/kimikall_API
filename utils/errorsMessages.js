@@ -10,7 +10,12 @@ const msgErr = {
     errDbInvalidInput: `${er}Invalid database input`,
     errSession: (logged) => `${er}${logged ? 'Already logged in' : 'Not logged yet'}`,
     errUserNotFound: (user) => `${er}${user ? `${user} user not found` : 'Invalid user'}`,
-    errGeneral: (error) => `${er}${error}`
+    errUpdateFile: (file) => `${er}Could not update ${file}`,
+    errGeneral: (error) => `${er}${error}`,
+    errConsole: (userID,msg,error) => {
+        console.log(`--- USER ID : ${userID} : ${msg} ---`);
+        console.log(`${error}`);
+    }
 };
 
 module.exports = {msgErr};

@@ -4,14 +4,13 @@ const {app,server} = require('../app.js');
 
 const {dbCreateUser, dbFindUser ,dbDeleteUser} = require('../services/userServices.js');
 const {dbCreateProfile,dbDeleteProfile} = require('../services/profileServices.js');
-const { uploadImage, deleteImage } = require('../services/imagesServices');
 const {saveToken,cleanToken} = require('../services/tokenServices.js');
 const {genToken} = require('../utils/jwtAuth.js');
 
 
 //Multer fuctions Mock
 jest.mock('multer', () => {
-    //Multer fake function
+    //Multer test response
     const multer = jest.fn(() => ({
         single: jest.fn(() => (req, res, next) => {
             req.file = { path: 'uploads/randomimage.jpg', originalname: 'randomimage.jpg' };
@@ -19,7 +18,7 @@ jest.mock('multer', () => {
         }),
     }));
 
-    //Fake diskStorage
+    //Test diskStorage
     multer.diskStorage = jest.fn(() => ({
         _handleFile: jest.fn(),
         _removeFile: jest.fn(),

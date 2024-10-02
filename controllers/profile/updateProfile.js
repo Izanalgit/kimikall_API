@@ -2,9 +2,11 @@ const {dbFindProfile,dbUpdateProfile} = require('../../services/profileServices'
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
+    
+    const userId = req.user;
+    const payload = req.body.payload;
+    
     try{
-        const userId = req.user;
-        const payload = req.body.payload;
 
         //No payload
         if(!payload)
@@ -40,8 +42,7 @@ module.exports = async (req,res) => {
             .json({ message: 'Bio updated successfully', updatedProfile });
         
     }catch(err){
-
-        console.error('ERROR : UPDATE BIO : ', err);
+        msgErr.errConsole(userId,'UPDATE BIO', err);
         return res
             .status(500)
             .json({messageErr:msgErr.errDbInvalidInput});

@@ -7,8 +7,8 @@ async function addBlockedUser (userId, blockUserId){
             $addToSet: {blockedUsers : blockUserId}
         })
     }catch (err){
-        console.error('DB-BLOCK USERS ERROR : ',err);
-        throw new Error ('ERROR : can not block that user');
+        console.error('ERROR : DB-BLOCK USERS : ',err);
+        throw new Error ('can not block that user');
     }
 }
 
@@ -19,8 +19,8 @@ async function removeBlockedUser (userId, blockUserId) {
             $pull: {blockedUsers : blockUserId}
         })
     }catch (err){
-        console.error('DB-UNBLOCK USERS ERROR : ',err);
-        throw new Error ('ERROR : can not unblock that user');
+        console.error('ERROR : DB-UNBLOCK USERS : ',err);
+        throw new Error ('can not unblock that user');
     }
 }
 
@@ -35,8 +35,8 @@ async function getBlockedUser(userId) {
         return user.blockedUsers;
 
     }catch (err){
-        console.error('DB-GET BLOCK USERS ERROR : ',err);
-        throw new Error ('ERROR : can get blocked users');
+        console.error('ERROR : DB-GET BLOCK USERS : ',err);
+        throw new Error ('can get blocked users');
     }
 }
 

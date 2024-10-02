@@ -75,7 +75,7 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
             .post('/api/chat/send')
             .set('Authorization', tokenAuth1)
             .send(message)
-            .expect(400)
+            .expect(500)
             .expect ((res)=>{
                 expect(res.body.messageErr).toBeDefined();
             })       
