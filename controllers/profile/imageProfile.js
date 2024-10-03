@@ -43,7 +43,7 @@ module.exports = async (req,res) => {
                 await deleteImage(profile.profilePictureId);
 
             // Upload image
-            const result = await uploadImage(file.path, 'profile_pictures');
+            const result = await uploadImage(file.path, 'profile_pictures', 'profile');
             imageUrl = result.url;
             publicId = result.publicId;
 
@@ -59,7 +59,7 @@ module.exports = async (req,res) => {
                 await deleteImage(profile.coverPhotoId);
 
             // Upload image
-            const result = await uploadImage(file.path, 'cover_photos');
+            const result = await uploadImage(file.path, 'cover_photos', 'cover');
             imageUrl = result.url;
             publicId = result.publicId;
 

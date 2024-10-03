@@ -5,7 +5,7 @@ const User = require('../models/User');
 // Send message with ID
 async function sendMessage(remit,recep,messageText) {
 
-    //Check if block
+    //Check if block -> TO UTILES
     const [blockRemit , blockRecep] = await Promise.all([
         User.findById(remit).select('blockedUsers'),
         User.findById(recep).select('blockedUsers'),
