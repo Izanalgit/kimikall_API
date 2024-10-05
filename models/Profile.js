@@ -7,8 +7,7 @@ const profileSchema = new mongoose.Schema({
         unique:true
     },
     age: {
-        type: Number,
-        min: [18,'18 min age']
+        type: Number
     },
     genre: {
         type: String,

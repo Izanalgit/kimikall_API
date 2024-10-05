@@ -21,28 +21,25 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
             genre = userProfile.genre === 'Hombre'?'Mujer':'Hombre';
 
         //Age filter
-        const minAge = filterSearch.minAge || 18;
+        const minAge = filterSearch.minAge || null;
         const maxAge = filterSearch.maxAge || null;
-
-        //Location filter
-        const location = filterSearch.closeSearch ? userProfile.location : null;
 
         //Filter object
         const filterObj = {
-            userId:{$nin:userBlocks.blockedUsers},
+            ...(userBlocks.blockedUsers.length !== 0 && {userId:{$nin:userBlocks.blockedUsers}}),
             special:userProfile.special,
             orentation:userProfile.orentation,
             ...(genre && {genre}),
-            age:{
-                $gte:minAge,
-                ...(maxAge && { $lte: maxAge })
-            },
-            ...(location && { location })
+            ...(minAge && { age:{$gte: minAge} }),
+            ...(maxAge && { age:{$lte: maxAge} }),
+            ...(filterSearch.location && { location:userProfile.location })
         }
-        
+
+        console.log(filterObj) //CHIVATO
+
         //Normal search profiles
         const profiles = await Profile.find(
-            filterObj,
+            {...filterObj},
             'userId age genre orentation special location bio profilePicture'
         );
         
@@ -63,7 +60,7 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
             return { ...profile._doc, name: user ? user.name : '' };
         });
 
-        if(!advancedSearch)
+        if(!advancedSearch || Object.keys(advancedSearch).length === 0 )
             return profilesWithNames;
 
         //Advanced filter object
@@ -74,9 +71,11 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
             ...(advancedSearch.ethnia && { ethnia: advancedSearch.ethnia }),
             ...(advancedSearch.religion && { religion: advancedSearch.religion }),
             ...(advancedSearch.relationship && { relationship: advancedSearch.relationship }),
-            ...(advancedSearch.smoking && { smoking: advancedSearch.smoking }),
-            ...(advancedSearch.drinking && { drinking: advancedSearch.drinking }),
+            ...(advancedSearch.smoking != undefined && { smoking: advancedSearch.smoking }),
+            ...(advancedSearch.drinking != undefined && { drinking: advancedSearch.drinking }),
         }
+
+        console.log(extendedFilter) //CHIVATO
 
         // Find extended profiles
         const extendedProfiles = await ProfileExtended.find(extendedFilter, 'userId');

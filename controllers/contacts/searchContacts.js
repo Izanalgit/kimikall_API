@@ -17,7 +17,7 @@ module.exports = async (req,res) => {
         const {normalSearch,expandedSearch} = payload;
 
         //Incorrect payload
-        if(!normalSearch)
+        if(!normalSearch && !expandedSearch)
             return res
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});    
