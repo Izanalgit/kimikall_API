@@ -4,6 +4,7 @@ const {app,server} = require('../app.js');
 
 const {dbCreateUser, dbFindUser ,dbDeleteUser} = require('../services/userServices.js');
 const {dbCreateProfile,dbDeleteProfile} = require('../services/profileServices.js');
+const {dbCreateProfileExtended,dbDeleteProfileExtended} = require('../services/profileExtendedServices.js');
 const {saveToken,cleanToken} = require('../services/tokenServices.js');
 const {genToken} = require('../utils/jwtAuth.js');
 
@@ -40,8 +41,8 @@ describe('TEST OF PROFILE END ROUTES',()=>{
     const user0 = {name:"Random22",email:"www.random@probe.com",pswd:"12wABCabc!"};
     const user1 = {name:"Jhon117",email:"www.spartan@probe.com",pswd:"12wABCabc!"};
 
-    const bioToUpdate = {payload:{bio:'The master chief'}};
-    const specialToUpdate = {payload:{special:['A','C']}};
+    const bioToUpdate = {payload:{profile:{bio:'The master chief'}}};
+    const relationshipToUpdate = {payload:{extended:{relationship:'Soltería'}}};
 
     let user0Id;
     let user1Id;
@@ -62,33 +63,34 @@ describe('TEST OF PROFILE END ROUTES',()=>{
         
         await saveToken(user0Id,tokenAuth);
         await dbCreateProfile(user0Id);
+        await dbCreateProfileExtended(user0Id);
         
     });
             
     it('BIO : Should upload bio to user profile', async ()=>{
 
         await agent
-            .post('/api/profile/bio')
+            .post('/api/profile/update')
             .set('Authorization', tokenAuth)
             .send(bioToUpdate)
             .expect(200)
             .expect ((res)=>{
                 expect(res.body.message).toBeDefined();
-                expect(res.body.updatedProfile.bio).toBe(bioToUpdate.payload.bio);
+                expect(res.body.updatedProfile.bio).toBe(bioToUpdate.payload.profile.bio);
             })
     })
 
-    it('SPECIAL : Should upload special to user profile', async ()=>{
+    it('RELATIONSHIP : Should upload relationship to user profile extended', async ()=>{
 
         await agent
-            .post('/api/profile/bio')
+            .post('/api/profile/update')
             .set('Authorization', tokenAuth)
-            .send(specialToUpdate)
+            .send(relationshipToUpdate)
             .expect(200)
             .expect ((res)=>{
                 expect(res.body.message).toBeDefined();
-                expect(res.body.updatedProfile.special)
-                    .toStrictEqual(specialToUpdate.payload.special);
+                expect(res.body.updatedProfileExtended.relationship)
+                    .toBe(relationshipToUpdate.payload.extended.relationship);
             })
     })
 
@@ -100,7 +102,10 @@ describe('TEST OF PROFILE END ROUTES',()=>{
             .expect(200)
             .expect((res)=>{
                 expect(res.body.userProfile).toBeDefined();
-                expect(res.body.userProfile.bio).toBe(bioToUpdate.payload.bio);
+                expect(res.body.userProfile.bio).toBe(bioToUpdate.payload.profile.bio);
+                expect(res.body.userProfileExtended).toBeDefined();
+                expect(res.body.userProfileExtended.relationship)
+                    .toBe(relationshipToUpdate.payload.extended.relationship);
             });
     })
 
@@ -123,6 +128,7 @@ describe('TEST OF PROFILE END ROUTES',()=>{
         await dbDeleteUser(user1Id);
         await cleanToken(user0Id);
         await dbDeleteProfile(user0Id);
+        await dbDeleteProfileExtended(user0Id);
 
         await mongoose.connection.close();
         server.close();

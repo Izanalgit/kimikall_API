@@ -1,4 +1,5 @@
 const {dbFindProfile,dbUpdateProfile} = require('../../services/profileServices');
+const {dbFindProfileExtended,dbUpdateProfileExtended} = require('../../services/profileExtendedServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -14,10 +15,10 @@ module.exports = async (req,res) => {
                 .status(400)
                 .json({messageErr:msgErr.errPayloadRequired});
 
-        const {bio,special} = payload;
+        const {profile,extended} = payload;
 
         //Incorrect payload
-        if(!bio && !special)
+        if(!profile && !extended)
             return res
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});
@@ -25,21 +26,27 @@ module.exports = async (req,res) => {
 
         //Get profile user
         const userProfile = await dbFindProfile(userId);
+        const userProfileExtended = await dbFindProfileExtended(userId);
 
-        if(!userProfile) 
+        if(!userProfile || !userProfileExtended) 
             return res
                 .status(401)
                 .json({messageErr:msgErr.errUserNotFound('Profile')});
 
         //Update user profile
-        userProfile.special = special;  //Take atention if can it delete with [] !! 
-        userProfile.bio = bio;
+        Object.assign(userProfile,profile);
+        Object.assign(userProfileExtended,extended);
 
         const updatedProfile = await dbUpdateProfile(userId,userProfile);
+        const updatedProfileExtended = await dbUpdateProfileExtended(userId,userProfileExtended);       
         
         return res
             .status(200)
-            .json({ message: 'Profile updated successfully', updatedProfile });
+            .json({ 
+                message: 'Profile updated successfully', 
+                updatedProfile ,
+                updatedProfileExtended
+            });
         
     }catch(err){
         msgErr.errConsole(userId,'UPDATE PROFILE', err);

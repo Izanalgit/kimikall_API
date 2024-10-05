@@ -14,7 +14,7 @@ router.get('/', verifyToken, getProfile);
 
 router.post('/image/:imageType', verifyToken, upload.single('image'), imageProfile);
 
-router.post('/bio', verifyToken, updateProfile);
+router.post('/update', verifyToken, updateProfile);
 
 
 module.exports = router;

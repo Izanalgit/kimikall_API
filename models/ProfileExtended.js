@@ -35,7 +35,7 @@ const profileExtendedSchema = new mongoose.Schema({
             message : '{VALUE} is not available'
         }
     },
-    relationship : [{
+    relationship : {
         type: String,
         enum : {
             values : [
@@ -47,7 +47,7 @@ const profileExtendedSchema = new mongoose.Schema({
             ],
             message : '{VALUE} is not available'
         }
-    }],
+    },
     smoking:{
         type: Boolean,
     },

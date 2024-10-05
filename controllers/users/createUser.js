@@ -1,5 +1,6 @@
 const {dbCreateUser} = require('../../services/userServices');
 const {dbCreateProfile,dbDeleteProfile} = require('../../services/profileServices');
+const {dbCreateProfileExtended,dbDeleteProfileExtended} = require('../../services/profileExtendedServices');
 const {dbCreateContactDocument,deleteContactList} = require('../../services/contactsServices');
 const {passHasher} = require('../../utils/passwordHasher');
 const {msgErr} = require('../../utils/errorsMessages');
@@ -38,13 +39,16 @@ module.exports =async (req,res)=>{
 
         const newUserId = newUser._id;
         const newProfile = await dbCreateProfile(newUserId);
+        const newProfileExtended = await dbCreateProfileExtended(newUserId);
         const newContactsDoc = await dbCreateContactDocument(newUserId);
 
         //Check created user ---------------- IMPROVE -> EMAIL VERIFY TO COMPLETE PROFILE !!!
-        //Deletes malformed user
-        if(!newProfile || !newContactsDoc){
-            if(newProfile) await dbDeleteProfile(userId);
-            if(newContactsDoc) await deleteContactList(userId);
+        
+        //Deletes malformed user docs
+        if(!newProfile || !newContactsDoc || !newProfileExtended){
+            if(newProfile) await dbDeleteProfile(newUserId);
+            if(newContactsDoc) await deleteContactList(newUserId);
+            if(newProfileExtended) await dbDeleteProfileExtended(newUserId);
             
             return res
                 .status(500)
