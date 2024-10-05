@@ -1,14 +1,16 @@
 const User = require('../models/User');
 
-const blockCheck = async (remit,recep) => {
+const blockCheck = async (user0Id,user1Id) => {
 
     const [blockRemit , blockRecep] = await Promise.all([
-        User.findById(remit).select('blockedUsers'),
-        User.findById(recep).select('blockedUsers'),
+        User.findById(user0Id).select('blockedUsers'),
+        User.findById(user1Id).select('blockedUsers'),
     ]);
 
-    if(blockRemit.blockedUsers.includes(recep) || blockRecep.blockedUsers.includes(remit))
-        throw new Error ('can not find to that user');
+    if(blockRemit.blockedUsers.includes(user1Id) || blockRecep.blockedUsers.includes(user0Id))
+        return true;
+    else
+        return false;
 }
 
 module.exports = blockCheck;

@@ -5,7 +5,9 @@ const blockCheck = require('../utils/blockCheck');
 async function sendMessage(remit,recep,messageText) {
 
     //Check if blocked
-    await blockCheck(remit,recep);
+    const blocked = await blockCheck(remit,recep);
+    if(blocked)
+        throw new Error ('can not find to that user');
 
     //Send message
     const messageObjt = {remit,recep,messageText}
