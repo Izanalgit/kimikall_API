@@ -1,14 +1,14 @@
 const User = require('../models/User');
 const Profile = require('../models/Profile');
-
-const blockCheck = require('../utils/blockCheck');
+const ProfileExtended = require('../models/ProfileExtended');
 
 //Find by search
-async function searchProfiles(userId,filterSearch){
+async function searchProfiles(userId,filterSearch,advancedSearch){
 
     try{
 
-        const userProfile = await Profile.findOne(userId);
+        const userProfile = await Profile.findOne({userId});
+        const userBlocks = await User.findById(userId,'blockedUsers')
         
         //Genre preselection
         let genre;
@@ -25,12 +25,11 @@ async function searchProfiles(userId,filterSearch){
         const maxAge = filterSearch.maxAge || null;
 
         //Location filter
-        const location = filterSearch.closeSearch?
-            userProfile.location:
-            null;
+        const location = filterSearch.closeSearch ? userProfile.location : null;
 
         //Filter object
         const filterObj = {
+            userId:{$nin:userBlocks.blockedUsers},
             special:userProfile.special,
             orentation:userProfile.orentation,
             ...(genre && {genre}),
@@ -40,16 +39,17 @@ async function searchProfiles(userId,filterSearch){
             },
             ...(location && { location })
         }
-    
+        
+        //Normal search profiles
         const profiles = await Profile.find(
             filterObj,
             'userId age genre orentation special location bio profilePicture'
         );
         
-         // Block check
-         const validProfiles = await Promise.all(profiles.map(async (profile) => {
-            const block = await blockCheck(userId, profile.userId);
-            return block ? null : profile;
+        // Block check
+        const validProfiles = await Promise.all(profiles.map(async (profile) => {
+            const profileUser = await User.findById(profile.userId, 'blockedUsers');
+            return profileUser.blockedUsers.includes(userId) ? null : profile;
         }));
 
         const filteredProfiles = validProfiles.filter((profile) => profile !== null);
@@ -63,7 +63,30 @@ async function searchProfiles(userId,filterSearch){
             return { ...profile._doc, name: user ? user.name : '' };
         });
 
-        return profilesWithNames;
+        if(!advancedSearch)
+            return profilesWithNames;
+
+        //Advanced filter object
+        const extendedFilter = {
+            userId : {$in: userIds},
+            ...(advancedSearch.minHeight && { height: { $gte: advancedSearch.minHeight } }),
+            ...(advancedSearch.maxHeight && { height: { $lte: advancedSearch.maxHeight } }),
+            ...(advancedSearch.ethnia && { ethnia: advancedSearch.ethnia }),
+            ...(advancedSearch.religion && { religion: advancedSearch.religion }),
+            ...(advancedSearch.relationship && { relationship: advancedSearch.relationship }),
+            ...(advancedSearch.smoking && { smoking: advancedSearch.smoking }),
+            ...(advancedSearch.drinking && { drinking: advancedSearch.drinking }),
+        }
+
+        // Find extended profiles
+        const extendedProfiles = await ProfileExtended.find(extendedFilter, 'userId');
+        const extendedUserIds = extendedProfiles.map((profile) => profile.userId.toString());
+ 
+        // Filter profiles that match extended search
+        const finalProfiles = profilesWithNames.filter((profile) => 
+            extendedUserIds.includes(profile.userId.toString()));
+ 
+        return finalProfiles;
 
     }catch (err){
         console.error('ERROR : DB-SEARCH PROFILES : ',err);

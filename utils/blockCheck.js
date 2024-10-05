@@ -13,4 +13,4 @@ const blockCheck = async (user0Id,user1Id) => {
         return false;
 }
 
-module.exports = blockCheck;
+module.exports = {blockCheck};

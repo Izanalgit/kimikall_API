@@ -1,5 +1,5 @@
 const Message = require('../models/Message');
-const blockCheck = require('../utils/blockCheck');
+const {blockCheck} = require('../utils/blockCheck');
 
 // Send message with ID
 async function sendMessage(remit,recep,messageText) {
