@@ -120,36 +120,18 @@ async function removeContactUser (userId, contactUserId) {
     }
 }
 
-//Get contacts user list
+//Get contacts user lists
 async function getContactList(userId) {
     try{
         const userContacts = await Contact.findOne({userId});
-        return userContacts.contacts;
+        return {
+            contacts : userContacts.contacts,
+            solicitations : userContacts.contactsSolicitation,
+            requests : userContacts.contactsRequest};
+
     }catch (err){
         console.error('ERROR : DB-GET CONTACT USER LIST : ',err);
         throw new Error ('can not get contact user list');
-    }
-}
-
-//Get contacts request user list
-async function getContactRequestList(userId) {
-    try{
-        const userContacts = await Contact.findOne({userId});
-        return userContacts.contactsRequest;
-    }catch (err){
-        console.error('ERROR : DB-GET CONTACT REQUESTS USER LIST : ',err);
-        throw new Error ('can not get contact requests user list');
-    }
-}
-
-//Get user solicitations list
-async function getContactSolicitationList(userId) {
-    try{
-        const userContacts = await Contact.findOne({userId});
-        return userContacts.contactsSolicitation;
-    }catch (err){
-        console.error('ERROR : DB-GET CONTACT SOLICITATIONS USER LIST : ',err);
-        throw new Error ('can not get contact solicitations user list');
     }
 }
 
@@ -169,7 +151,5 @@ module.exports = {
     addSolicitationContact,
     removeContactUser,
     getContactList,
-    getContactRequestList,
-    getContactSolicitationList,
     deleteContactList
 }
