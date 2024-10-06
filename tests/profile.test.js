@@ -94,7 +94,7 @@ describe('TEST OF PROFILE END ROUTES',()=>{
             })
     })
 
-    it('GET : Should get the user profile',async ()=>{
+    it('GET : Should get the user completed profile',async ()=>{
 
         await agent
             .get('/api/profile')

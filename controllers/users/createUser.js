@@ -32,7 +32,7 @@ module.exports =async (req,res)=>{
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});
         
-        //Create new user
+        //Create new user  -------------------------- IMPROVE AND REFACT !!!
     
         const hashedPaswd = await passHasher(pswd); //hash user password
         const newUser = await dbCreateUser({name,email,pswd:hashedPaswd});
@@ -44,7 +44,7 @@ module.exports =async (req,res)=>{
 
         //Check created user ---------------- IMPROVE -> EMAIL VERIFY TO COMPLETE PROFILE !!!
         
-        //Deletes malformed user docs
+        //Deletes malformed user docs -------------------------- IMPROVE AND REFACT !!!
         if(!newProfile || !newContactsDoc || !newProfileExtended){
             if(newProfile) await dbDeleteProfile(newUserId);
             if(newContactsDoc) await deleteContactList(newUserId);

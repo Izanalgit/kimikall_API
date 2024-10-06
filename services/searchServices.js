@@ -35,8 +35,6 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
             ...(filterSearch.location && { location:userProfile.location })
         }
 
-        console.log(filterObj) //CHIVATO
-
         //Normal search profiles
         const profiles = await Profile.find(
             {...filterObj},
@@ -74,8 +72,6 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
             ...(advancedSearch.smoking != undefined && { smoking: advancedSearch.smoking }),
             ...(advancedSearch.drinking != undefined && { drinking: advancedSearch.drinking }),
         }
-
-        console.log(extendedFilter) //CHIVATO
 
         // Find extended profiles
         const extendedProfiles = await ProfileExtended.find(extendedFilter, 'userId');
