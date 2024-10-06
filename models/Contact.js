@@ -17,7 +17,31 @@ const contactSchema = new mongoose.Schema({
                 default: Date.now 
             }
         }
-    ]
+    ],
+    contactsRequest: [
+        {
+            contactId: { 
+                type: mongoose.Schema.ObjectId, 
+                required: true 
+            },
+            createdAt: { 
+                type: Date, 
+                default: Date.now 
+            }
+        }
+    ],
+    contactsSolicitation: [
+        {
+            contactId: { 
+                type: mongoose.Schema.ObjectId, 
+                required: true 
+            },
+            createdAt: { 
+                type: Date, 
+                default: Date.now 
+            }
+        }
+    ],
     
 },{timestamps:true})
 

@@ -1,4 +1,4 @@
-const {addContactUser} = require('../../services/contactsServices');
+const {addSolicitationContact} = require('../../services/contactsServices');
 const {dbFindUserId} = require('../../services/userServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
@@ -33,15 +33,15 @@ module.exports = async (req,res) => {
         
         const newContactId = newContactObj._id;
 
-        //Add contact user  
-        await addContactUser(userId,newContactId);
+        //Send request to contact  
+        await addSolicitationContact(userId,newContactId);
 
         return res
             .status(200)
-            .json({message:'User added successfully to contacts'});
+            .json({message:'User request sended successfully'});
 
     }catch (err) {
-        msgErr.errConsole(userId,'ADD CONTACT', err);
+        msgErr.errConsole(userId,'ADD NEW CONTACT REQUEST', err);
         return res
             .status(500)
             .json({messageErr:msgErr.errApiInternal});
