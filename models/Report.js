@@ -4,16 +4,19 @@ const reportSchema = new mongoose.Schema({
     userId : {
         type:mongoose.Schema.ObjectId,
         require: true,
-        unique:true
     },
     reportedId : {
         type:mongoose.Schema.ObjectId,
         require: true,
-        unique:true
     },
     problem: { 
         type: String, 
         require: true 
+    },
+    check: {
+        type: Boolean,
+        require: true,
+        default: false
     },
     createdAt: { 
         type: Date, 
