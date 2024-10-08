@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const {app,server} = require('../app.js');
 
 const {dbCreateUser, dbFindUser ,dbDeleteUser} = require('../services/userServices.js');
+const {findReportsReported,deleteReport} = require('../services/reportServices.js');
 const {saveToken,cleanToken} = require('../services/tokenServices.js');
 const {genToken} = require('../utils/jwtAuth.js');
 
@@ -18,9 +19,12 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
     let user0Id;
     let user1Id;
 
+    let toReport;
     let message;
     let toBlock;
     let toUnBlock;
+
+    let reportDocId;
     
     let tokenAuth0;
     let tokenAuth1;
@@ -35,6 +39,7 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
         user0Id = user0Obj._id;
         user1Id = user1Obj._id;
 
+        toReport = {payload:{reportUser:user1Id,problem:"Is a covenant spy"}};
         message = {payload:{recep:user0Id,message:"Hello Master Chief"}};
         toBlock = {payload:{blockUser:user1Id}};
         toUnBlock = {payload:{unblockUser:user1Id}};
@@ -45,7 +50,27 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
         await saveToken(user0Id,tokenAuth0);
         await saveToken(user1Id,tokenAuth1);
     });
-            
+    
+    it('REPORT : Should report an user', async ()=>{
+
+        await agent
+            .post('/api/privacy/report')
+            .set('Authorization', tokenAuth0)
+            .send(toReport)
+            .expect(200)
+            .expect ((res)=>{
+                expect(res.body.message).toBeDefined();
+            })        
+
+        const reports = await findReportsReported(user1Id);
+
+        reportDocId = reports[0]._id;
+
+        expect(reports[0].userId).toStrictEqual(user0Id);
+        expect(reports[0].reportedId).toStrictEqual(user1Id);
+        expect(reports[0].problem).toBe(toReport.payload.problem);
+    })
+
     it('BLOCK : Should block an user', async ()=>{
 
         await agent
@@ -98,6 +123,7 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
 
         await dbDeleteUser(user0Id);
         await dbDeleteUser(user1Id);
+        await deleteReport(reportDocId);
         await cleanToken(user0Id);
         await cleanToken(user1Id);
 
