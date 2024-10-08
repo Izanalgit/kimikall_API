@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const HOST = process.env.HOST || 'localhost';
+const HOST = process.env.HOST || 'http://localhost';
 
 // DB Connection
 dbConnect();
@@ -27,7 +27,7 @@ app.use('/api',require('./routes'));
 
 //API LISTEN
 const server = app.listen(PORT, () => {
-    console.log(`Server on http://${HOST}:${PORT}`);
+    console.log(`Server on ${HOST}:${PORT}`);
 })
 
 //TESTS EXPORTS
