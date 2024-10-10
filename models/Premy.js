@@ -7,12 +7,26 @@ const premySchema = new mongoose.Schema({
         unique:true
     },
     tokens : [{
-        type:String,
-        unique:true
+        token : {
+            type:String,
+            require: true
+        },
+        createdAt: { 
+            type: Date,
+            default: Date.now 
+        }
     }],
     premium : {
-        type:String,
-        unique:true
+        token : {
+            type:String,
+            require: true,
+            unique:true
+        },
+        createdAt: { 
+            type: Date,
+            expires: 2628288, //1 month 
+            default: Date.now 
+        },
     }
 })
 
