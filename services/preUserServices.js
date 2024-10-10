@@ -27,6 +27,17 @@ async function dbFindPreUser(preUserKey){
     }
 }
 
+//Find by email
+async function dbFindPreUserMail(preUserEmail){
+    try{
+        const user = await PreUser.findOne({email:preUserEmail});
+        return user;
+    }catch (err){
+        console.error('ERROR : DB-FIND PRE USER BY EMAIL : ',err);
+        throw new Error ('invalid verification user email');
+    }
+}
+
 //Delete by id
 async function dbDeletePreUser(id){
     try{
@@ -41,5 +52,6 @@ async function dbDeletePreUser(id){
 module.exports = {
     dbCreatePreUser,
     dbFindPreUser,
+    dbFindPreUserMail,
     dbDeletePreUser
 }

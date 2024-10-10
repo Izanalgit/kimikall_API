@@ -42,14 +42,14 @@ module.exports =async (req,res)=>{
 
         if(verificationEmailSended)
             return res
-                .status(201)
+                .status(200)
                 .json({message:'Revisa tu correo electrónico.'});
         
         else
             await dbDeletePreUser(newUser._id);
             msgErr.errConsole('PRE USER','SEND EMAIL');
             return res
-                .status(201)
+                .status(500)
                 .json({messageErr:msgErr.errGeneral('when send email')});
         
 

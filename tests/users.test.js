@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const {app,server} = require('../app.js');
 
 const {dbFindUser,dbDeleteUser} = require('../services/userServices.js');
+const {dbFindPreUserMail,dbDeletePreUser} = require('../services/preUserServices.js')
 const {dbDeleteProfile} = require('../services/profileServices.js');
 const {deleteContactList} = require('../services/contactsServices.js');
 const {cleanToken} = require('../services/tokenServices.js');
@@ -11,15 +12,36 @@ const agent = request.agent(app);
 
 describe('TEST OF CRUD AND LOGIN USERS END ROUTES',()=>{
 
-    const payload = {payload:{name:"Random22",email:"www.random@probe.com",pswd:"12wABCabc!"}};
+    //Change email for one of ur own
+    const payload = {payload:{name:"Random22",email:"probatin7@gmail.com",pswd:"12wABCabc!"}};
     const payloadUpdt = {payload:{name:"Jhon117"}};
 
     let tokenAuth;
+    let userKey;
+    let preUserDocId;
             
-    it('REGISTER : Should create a new user', async ()=>{
+    it('REGISTER : Should create a pre user and send key', async ()=>{
 
         await agent
             .post('/api/user/new')
+            .send(payload)
+            .expect(200)
+            .expect ((res)=>{
+                expect(res.body.message).toBeDefined();
+            })
+        
+        const preUser = await dbFindPreUserMail(payload.payload.email);
+        expect(preUser).toBeDefined();
+
+        userKey = String(preUser.key);
+        preUserDocId = preUser._id;
+
+    })
+
+    it('VERIFY : Should create a new verified user', async ()=>{
+
+        await agent
+            .get(`/api/user/verify/${userKey}`)
             .send(payload)
             .expect(201)
             .expect ((res)=>{
@@ -89,12 +111,14 @@ describe('TEST OF CRUD AND LOGIN USERS END ROUTES',()=>{
     //Server and DB connection closure
     afterAll(async () => {
         const user = await dbFindUser(payload.payload.email);
+        const preUser = await dbFindPreUserMail(payload.payload.email);
         if (user) {
             await dbDeleteUser(user._id);
             await dbDeleteProfile(user._id);
             await deleteContactList(user._id);
             await cleanToken(user._id);
         }
+        if (preUser) await dbDeletePreUser(preUser._id);
 
         await mongoose.connection.close();
         server.close();
