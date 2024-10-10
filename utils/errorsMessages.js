@@ -14,7 +14,8 @@ const msgErr = {
     errGeneral: (error) => `${er}${error}`,
     errConsole: (userID,msg,error) => {
         console.log(`--- USER ID : ${userID} : ${msg} ---`);
-        console.log(`${error}`);
+        if(error)
+            console.log(`${error}`);
     }
 };
 

@@ -2,6 +2,7 @@ const express = require('express');
 
 const { verifyToken } = require('../middleware/authToken');
 
+const singupUser = require('../controllers/users/singUpUser')
 const createUser = require('../controllers/users/createUser');
 const updateUser = require('../controllers/users/updateUser');
 const deleteUser = require('../controllers/users/deleteUser');
@@ -10,7 +11,9 @@ const logOutUser = require('../controllers/users/logOutUser');
 
 const router = express.Router();
 
-router.post('/new', createUser);
+router.post('/new', singupUser);
+
+router.get('/verify/:userKey', createUser);
 
 router.patch('/update', verifyToken, updateUser);
 

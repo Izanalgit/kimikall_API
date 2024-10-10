@@ -16,14 +16,14 @@ async function dbCreatePreUser(user){
     }
 }
 
-//Find by email
-async function dbFindPreUser(preUserEmail){
+//Find by key
+async function dbFindPreUser(preUserKey){
     try{
-        const user = await PreUser.findOne({email:preUserEmail});
+        const user = await PreUser.findOne({key:preUserKey});
         return user;
     }catch (err){
-        console.error('ERROR : DB-FIND PRE USER BY EMAIL : ',err);
-        throw new Error ('can not find that credentials');
+        console.error('ERROR : DB-FIND PRE USER BY KEY : ',err);
+        throw new Error ('invalid verification user key');
     }
 }
 
