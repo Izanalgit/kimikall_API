@@ -1,7 +1,10 @@
 const express = require('express');
+const http = require('http');
+const WebSocket = require('ws');
 const morgan = require('morgan');
 
 const dbConnect = require('./config/dataBaseConfig');
+const {handleSocketConnection} = require('./websockets/handlers');
 
 require('dotenv').config();
 
@@ -25,8 +28,15 @@ app.get('/',(req,res)=>res.status(200).send('API IS RUNNING HEALTHY'));
 //API ROUTES
 app.use('/api',require('./routes'));
 
+//HTTP SHARED SERVER
+const server = http.createServer(app);
+
+//WEBSOCKET INIT
+const wss = WebSocket.Server({server});
+wss.on('connection', handleSocketConnection);
+
 //API LISTEN
-const server = app.listen(PORT, () => {
+server = app.listen(PORT, () => {
     console.log(`Server on ${HOST}:${PORT}`);
 })
 

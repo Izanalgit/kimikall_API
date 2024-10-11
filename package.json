@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --silent --verbose --maxWorkers=1",
     "test:logs": "jest --verbose --maxWorkers=1",
-    "test:watch": "jest --watchALL"
+    "test:watch": "jest --watchALL --maxWorkers=1"
   },
   "keywords": [],
   "author": "Ethan.A",
@@ -22,7 +22,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.6.1",
     "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",

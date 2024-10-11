@@ -1,4 +1,7 @@
 const jwt = require ('jsonwebtoken');
+const {findToken} = require('./../services/tokenServices');
+const {msgErr} = require ('./errorsMessages');
+
 
 //Session Token generator
 function genToken(user){
@@ -31,8 +34,31 @@ function verPremyToken(token) {
     }
 }
 
+//WebSocket auth
+async function wssTokenAuth(ws,token){
+    try{
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.user;
+
+        //User login check
+        const sesToken = await findToken(userId);
+        if(!sesToken) throw new Error(msgErr.errSession(false));
+        if(sesToken != token) throw new Error(msgErr.errToken);
+        
+        console.log(`USER : ${userId} : WEBSOCKET CONNECT`);
+        return userId;        
+
+    } catch (err){
+        msgErr.errConsole('UNKNOW USER','WSS AUTH',err);
+        ws.close();
+        return null;
+    }
+}
+
+
 module.exports = {
     genToken,
     genPremyToken,
-    verPremyToken
+    verPremyToken,
+    wssTokenAuth
 }
