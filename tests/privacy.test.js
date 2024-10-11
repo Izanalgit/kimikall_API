@@ -4,6 +4,7 @@ const {app,server} = require('../app.js');
 
 const {dbCreateUser, dbFindUser ,dbDeleteUser} = require('../services/userServices.js');
 const {findReportsReported,deleteReport} = require('../services/reportServices.js');
+const {dbCreatePremyDocument,addMessageToken,dbDeletePremyDocument} = require('../services/premyServices.js');
 const {saveToken,cleanToken} = require('../services/tokenServices.js');
 const {genToken} = require('../utils/jwtAuth.js');
 
@@ -47,6 +48,9 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
         tokenAuth0 = genToken(user0Id);
         tokenAuth1 = genToken(user1Id);
         
+        await dbCreatePremyDocument(user1Id);
+        await addMessageToken(user1Id);
+
         await saveToken(user0Id,tokenAuth0);
         await saveToken(user1Id,tokenAuth1);
     });
@@ -124,6 +128,7 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
         await dbDeleteUser(user0Id);
         await dbDeleteUser(user1Id);
         await deleteReport(reportDocId);
+        await dbDeletePremyDocument(user1Id)
         await cleanToken(user0Id);
         await cleanToken(user1Id);
 

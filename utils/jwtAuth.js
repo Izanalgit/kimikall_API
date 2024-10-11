@@ -13,23 +13,24 @@ function genPremyToken(userId,premy){
     const payloadPremy = {user: userId, type: 'premy'};
     
     if(premy)
-        return jwt.sign(payloadPremy,process.env.JWT_PREMY_SECRET,{expiresIn:'30d'});
+        return jwt.sign(payloadPremy,process.env.PREMY_JWT_SECRET,{expiresIn:'30d'});
     else
-        return jwt.sign(payloadMessage,process.env.JWT_PREMY_SECRET);
+        return jwt.sign(payloadMessage,process.env.PREMY_JWT_SECRET);
 }
 
 //Premy Token verifier
 function verPremyToken(token) {
-    jwt.verify(token,JWT_PREMY_SECRET, (err,decoded)=>{
+    try {
+        const decoded = jwt.verify(token, process.env.PREMY_JWT_SECRET);
         
-        if(err) throw new Error(err);
+        if (!decoded.user || !decoded.type) throw new Error('Invalid token');
 
-        const user = decoded.user;
-        const type = decoded.type;
-
-        return {user,type};
-    })
+        return decoded; 
+    } catch (err) {
+        throw new Error('Token verification failed: ', err.message);
+    }
 }
+
 module.exports = {
     genToken,
     genPremyToken,
