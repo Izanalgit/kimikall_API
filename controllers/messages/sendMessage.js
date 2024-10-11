@@ -1,6 +1,8 @@
 const {sendMessage} = require('../../services/messagesServices');
 const {dbFindUserId} = require('../../services/userServices');
 const {countMessageToken,countPremiumToken,removeMessageToken} = require('../../services/premyServices');
+const {sendNewMessageNoti} = require('../../websockets/events');
+const connections = require('../../websockets/connections');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -57,6 +59,9 @@ module.exports = async (req,res) => {
 
         //Send Message
         await sendMessage(userId,recepId,message);
+        
+        //WebSocket notify
+        sendNewMessageNoti(connections,userId,recepId);
         
         return res
             .status(200)

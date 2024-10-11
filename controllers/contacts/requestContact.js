@@ -1,5 +1,7 @@
 const {addSolicitationContact} = require('../../services/contactsServices');
 const {dbFindUserId} = require('../../services/userServices');
+const {sendFriendRequest} = require('../../websockets/events');
+const connections = require('../../websockets/connections');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -35,6 +37,9 @@ module.exports = async (req,res) => {
 
         //Send request to contact  
         await addSolicitationContact(userId,newContactId);
+
+        //WebSockete notify
+        sendFriendRequest(connections, userId, newContactId);
 
         return res
             .status(200)
