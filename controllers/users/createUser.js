@@ -3,6 +3,7 @@ const {dbCreateUser, dbDeleteUser} = require('../../services/userServices');
 const {dbCreateProfile,dbDeleteProfile} = require('../../services/profileServices');
 const {dbCreateProfileExtended,dbDeleteProfileExtended} = require('../../services/profileExtendedServices');
 const {dbCreateContactDocument,deleteContactList} = require('../../services/contactsServices');
+const {dbCreatePremyDocument,dbDeletePremyDocument} = require('../../services/premyServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports =async (req,res)=>{
@@ -32,20 +33,24 @@ module.exports =async (req,res)=>{
         const newProfile = dbCreateProfile(newUserId);
         const newProfileExtended = dbCreateProfileExtended(newUserId);
         const newContactsDoc = dbCreateContactDocument(newUserId);
+        const newPremyDoc = dbCreatePremyDocument(newUserId);
 
-        let profileCreated,profileExtendedCreated,contactsDocCreated;
+        let profileCreated,profileExtendedCreated,contactsDocCreated,premyDocCreated;
 
         try{
             [
                 profileCreated, 
                 profileExtendedCreated, 
-                contactsDocCreated
+                contactsDocCreated,
+                premyDocCreated
             ] = await Promise.all([
                 newProfile,
                 newProfileExtended,
-                newContactsDoc
+                newContactsDoc,
+                newPremyDoc
             ]);
         }catch(err){
+            //Rollback if somethings fails
             await dbDeleteUser (newUserId);
             
             if(profileCreated) await dbDeleteProfile(newUserId);
@@ -57,7 +62,10 @@ module.exports =async (req,res)=>{
             if(contactsDocCreated) await dbDeleteProfileExtended(newUserId);
             else msgErr.errConsole('PRE USER','CREATION USER','new contacts doc');
 
-            throw new Error('user creation promises');
+            if(premyDocCreated) await dbDeletePremyDocument(newUserId);
+            else msgErr.errConsole('PRE USER','CREATION USER','new premy doc');
+
+            throw new Error('user creation documents');
         }
 
         return res

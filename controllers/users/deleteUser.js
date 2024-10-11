@@ -2,6 +2,7 @@ const {dbFindUserLogIn , dbDeleteUser} = require('../../services/userServices');
 const {dbDeleteProfile} = require('../../services/profileServices.js');
 const {deleteContactList} = require('../../services/contactsServices.js');
 const {dbDeleteProfileExtended} = require('../../services/profileExtendedServices.js');
+const {dbDeletePremyDocument} = require('../../services/premyServices.js');
 const {cleanToken} = require('../../services/tokenServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
@@ -33,6 +34,7 @@ module.exports = async (req,res) => {
         await dbDeleteProfile(userId);
         await deleteContactList(userId);
         await dbDeleteProfileExtended(userId);
+        await dbDeletePremyDocument(userId);
 
         return res
             .status(200)

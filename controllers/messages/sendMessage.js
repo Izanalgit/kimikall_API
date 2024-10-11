@@ -1,5 +1,6 @@
 const {sendMessage} = require('../../services/messagesServices');
 const {dbFindUserId} = require('../../services/userServices');
+const {countMessageToken,countPremiumToken,removeMessageToken} = require('../../services/premyServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -32,12 +33,34 @@ module.exports = async (req,res) => {
         
         const recepId = userRecept._id;
 
+        //Premy tokens
+        const premiumTime = await countPremiumToken(userId);
+        const msgTokens =  await countMessageToken(userId);
+
+        let substactToken;
+
+        //Premium and tokens check
+        if(premiumTime === 0 && msgTokens === 0)
+            return res
+                .status(402)
+                .json({message:"No tokens or premium left",sended: false});
+
+        //Message token substact if not premium
+        if(premiumTime === 0 && msgTokens > 0)
+            substactToken = await removeMessageToken(userId);
+        
+        //Token double check
+        if(!substactToken)
+            return res
+                .status(402)
+                .json({message:"No tokens left",sended: false});
+
         //Send Message
         await sendMessage(userId,recepId,message);
         
         return res
             .status(200)
-            .json({message:"Message properly sent"});
+            .json({message:"Message properly sent", sended: true});
 
     }catch(err){
         msgErr.errConsole(userId,'SEND MESSAGE', err);
