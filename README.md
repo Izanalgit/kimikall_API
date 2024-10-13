@@ -3,13 +3,13 @@ En construcción ...
 
 ## END ROUTES
 
-- MESSAGES
+- MESSAGES {headers : Authorization} (key token)
     - READ MESSAGES
         - {params: contact} (userId)
     + SEND MESSAGE
         - {payload:{recep,message}} (userId, string message)
     
-* PRIVACY
+* PRIVACY {headers : Authorization} (key token)
     - REPORT ACOUNT
         - {payload:{reportUser,problem}} (userId, string message)
     * BLOCK ACOUNT
@@ -18,22 +18,22 @@ En construcción ...
     + UNBLOCK ACOUNT
         - {payload:{unblockUser}} (userId)
 
-* USER
+* USER {headers : Authorization} (key token)
     - ACOUNT
-        - CREATE USER
+        - CREATE USER (no header)
             - {params: userKey} (token Key)
         * UPDATE USER
             - {payload:{name,email,pswd}} (string name, string email, string password)
         + DELETE USER
             - {payload:{email,pswd}} (string email, string password)
     + ACCES
-        - SING UP
+        - SING UP (no header)
             - {payload:{name,email,pswd}} (string name, string email, string password)
         * LOG IN
             - {payload:{email,pswd}} (string email, string password)
         + LOG OUT
 
-* PRORFIL
+* PRORFIL {headers : Authorization} (key token)
     - UPDATE PROFIL
         - {payload:{profile,extended}} (profile object, extended profile object)
     * UPLOAD IMAGE PROFILE
@@ -43,7 +43,7 @@ En construcción ...
     + GET CONTACT PROFIL
         - {params: contact} (userId)
 
-* CONTACTS
+* CONTACTS {headers : Authorization} (key token)
     - ADD CONTACT 
         - {payload:{newContact}} (userId)
     * DELTE CONTACT
@@ -54,7 +54,7 @@ En construcción ...
     + SEARCH CONTACTS
         - {payload:{normalSearch,expandedSearch}} (search forms)
 
-* TOKEN
+* TOKEN {headers : Authorization} (key token)
     - GET INFO ACOUNT
     * BUY TOKEN TIME
     + BUY TOKEN MESSAGE
