@@ -29,10 +29,10 @@ app.get('/',(req,res)=>res.status(200).send('API IS RUNNING HEALTHY'));
 app.use('/api',require('./routes'));
 
 //HTTP SHARED SERVER
-const server = http.createServer(app);
+let server = http.createServer(app);
 
 //WEBSOCKET INIT
-const wss = WebSocket.Server({server});
+const wss = new WebSocket.Server({server});
 wss.on('connection', handleSocketConnection);
 
 //API LISTEN
