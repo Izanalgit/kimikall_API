@@ -7,7 +7,7 @@ const messageValidation = [
         .notEmpty()
         .withMessage('Se requiere de un usuario receptor para el mensaje')
         .custom(id => mongoose.isValidObjectId(id))
-        .withMessage('El usuario receptor debe ser un email válido'),
+        .withMessage('El usuario receptor debe ser un id válido'),
     body('payload.message')
         .trim()
         .notEmpty()
