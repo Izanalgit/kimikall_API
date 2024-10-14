@@ -29,9 +29,8 @@ const reportUserValidaiton = [
     body('payload.problem')
         .trim()
         .notEmpty()
+        .matches(/^[a-zA-Z0-9\s.,'-]*$/)
         .withMessage('Se requiere de un problema para reportar')
-        .isAlphanumeric()
-        .withMessage('El mensaje debe ser con caracteres alfanuméricos'),
 ]
 
 module.exports = { 

@@ -9,17 +9,24 @@ const deleteUser = require('../controllers/users/deleteUser');
 const logInUser = require('../controllers/users/logInUser');
 const logOutUser = require('../controllers/users/logOutUser');
 
+const {validate} = require('../middleware/validate');
+const {
+    userValidation,
+    userUpdateValidation,
+    credentialsValidation
+} = require('../validations/userValidations');
+
 const router = express.Router();
 
-router.post('/new', singupUser);
+router.post('/new', userValidation, validate, singupUser);
 
 router.get('/verify/:userKey', createUser);
 
-router.patch('/update', verifyToken, updateUser);
+router.patch('/update', verifyToken, userUpdateValidation, validate, updateUser);
 
-router.delete('/delete', verifyToken, deleteUser);
+router.delete('/delete', verifyToken, credentialsValidation, validate, deleteUser);
 
-router.post('/login', logInUser);
+router.post('/login', credentialsValidation, validate, logInUser);
 
 router.post('/logout', verifyToken, logOutUser);
 

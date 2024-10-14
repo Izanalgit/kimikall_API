@@ -41,14 +41,10 @@ const userUpdateValidation = [
 		.withMessage('El nombre debe ser de almenos 3 carácteres')
         .isLength({ max: 15})
 		.withMessage('El nombre no debe superar los 15 caracteres'),
-    body('payload.email')
-        .trim()
-        .isEmail()
-        .withMessage('Debe ser un email válido'),
-	body('payload.pswd')
-        .trim()
-        // .isStrongPassword(strongPswd)
-        // .withMessage('Debe ser una contraseña fuerte')
+	// body('payload.pswd')
+    //     .trim()
+    //     .isStrongPassword(strongPswd)
+    //     .withMessage('Debe ser una contraseña fuerte')
 ]
 const credentialsValidation = [
     body('payload.email')

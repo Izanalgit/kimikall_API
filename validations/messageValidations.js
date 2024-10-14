@@ -11,6 +11,7 @@ const messageValidation = [
     body('payload.message')
         .trim()
         .notEmpty()
+        .matches(/^[a-zA-Z0-9\s.,'-]*$/)
         .withMessage('Se requiere de un cuerpo de mensaje')
 ]
 

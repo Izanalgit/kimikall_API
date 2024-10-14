@@ -6,12 +6,13 @@ const profileValidation = [
 
     //MIN AGE
 	body('payload.profile.age')
-        .trim()
+        .optional()
         .isInt({min:18})
         .withMessage('La edad debe ser numerica, igual o más 18'),
     //GENRE
     body('payload.profile.genre')
         .trim()
+        .optional()
         .isIn([
             'Hombre',
             'Mujer',
@@ -21,6 +22,7 @@ const profileValidation = [
     //ORENTATION
     body('payload.profile.orentation')
         .trim()
+        .optional()
         .isIn([
             'Hetero',
             'Homo',
@@ -29,25 +31,29 @@ const profileValidation = [
         .withMessage('Orientación no contemplada'),
     //SPECIAL CONDITION
     body('payload.profile.special')
-        .trim()
-        .isIn([
-            'A',
-            'B',
-            'C',
-            'D',
-            'F'
-        ])
-        .withMessage('Condición no contemplada'),
-    //BIOGRAPHI
-    body('payload.bio')
-        .trim()
-        // .isLength({ min: 800})
-        // .withMessage('La biografía tener como máximo 800 carácteres')
-        .isAlphanumeric()
+        .optional()
+        .custom(value => {
+            if (!Array.isArray(value)) {
+                throw new Error('Condición especial debe ser un array');
+            }
+            const allowedValues = ['A', 'B', 'C', 'D', 'F'];
+            const isValid = value.every(val => allowedValues.includes(val));
+            if (!isValid) {
+                throw new Error('Condición no contemplada');
+            }
+            return true;
+        }),
+    // BIOGRAPHI
+    body('payload.profile.bio')
+        .optional()
+        .isLength({ max: 800})
+        .withMessage('La biografía tener como máximo 800 carácteres')
+        .matches(/^[a-zA-Z0-9\s.,'-]*$/)
         .withMessage('La biografía debe ser con carácteres alfanuméricos'),
     //LOCATION
     // body('payload.profile.location')
     //     .trim()
+    //     .optional()
     //     .isIn([])
     //     .withMessage('El campo de localidad debe ser ....'),
 
@@ -56,11 +62,13 @@ const profileValidation = [
     //HEIGHT
 	body('payload.extended.height')
         .trim()
+        .optional()
         .isInt()
         .withMessage('La altura debe ser un numero entero'),
     //ETHNIA
     body('payload.extended.ethnia')
         .trim()
+        .optional()
         .isIn([
             'Asiática',
             'Caucásico',
@@ -72,6 +80,7 @@ const profileValidation = [
     //RELIGION
     body('payload.extended.religion')
         .trim()
+        .optional()
         .isIn([
             'Cristianísmo',
             'Judaísmo',
@@ -83,6 +92,7 @@ const profileValidation = [
     //RELATIONSHIP
     body('payload.extended.relationship')
         .trim()
+        .optional()
         .isIn([
             'Soltería',
             'Divorcio',
@@ -94,11 +104,13 @@ const profileValidation = [
     //SMOKING
     body('payload.extended.smoking')
         .trim()
+        .optional()
         .isBoolean()
         .withMessage('El campo de fumar ha de ser booleano'),
     //DRINKING
     body('payload.extended.drinking')
         .trim()
+        .optional()
         .isBoolean()
         .withMessage('El campo de beber ha de ser booleano'),
 

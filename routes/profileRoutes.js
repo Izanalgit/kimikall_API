@@ -8,6 +8,9 @@ const updateProfile = require('../controllers/profile/updateProfile');
 const {verifyToken} = require('../middleware/authToken');
 const {upload} = require('../middleware/uploader');
 
+const {validate} = require('../middleware/validate');
+const {profileValidation} = require('../validations/profileValidations');
+
 
 const router = express.Router();
 
@@ -17,7 +20,7 @@ router.get('/:contact', verifyToken, getContactProfile);
 
 router.post('/image/:imageType', verifyToken, upload.single('image'), imageProfile);
 
-router.post('/update', verifyToken, updateProfile);
+router.post('/update', verifyToken, profileValidation, validate, updateProfile);
 
 
 module.exports = router;

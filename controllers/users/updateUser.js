@@ -14,10 +14,10 @@ module.exports = async (req,res) => {
                 .status(400)
                 .json({messageErr:msgErr.errPayloadRequired});
 
-        const {name,email,pswd} = payload;
+        const {name,pswd} = payload;
 
         //Incorrect payload
-        if(!name && !email && !pswd)
+        if(!name && !pswd || payload.email)
             return res
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});
@@ -29,7 +29,7 @@ module.exports = async (req,res) => {
         
         return res
             .status(200)
-            .json({name:updtUser.name,email:updtUser.email});
+            .json({message:'User updated',name:updtUser.name});
 
     }catch(err){
         msgErr.errConsole(userId,'UPDATE ACOUNT', err);

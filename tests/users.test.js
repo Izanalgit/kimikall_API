@@ -74,7 +74,7 @@ describe('TEST OF CRUD AND LOGIN USERS END ROUTES',()=>{
             .expect(200)
             .expect ((res)=>{
                 expect(res.body.name).toBe(payloadUpdt.payload.name);
-                expect(res.body.email).toBe(payload.payload.email);
+                expect(res.body.message).toBeDefined();
             });     
 
     })

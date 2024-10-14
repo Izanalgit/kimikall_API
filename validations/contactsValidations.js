@@ -26,17 +26,17 @@ const contactSearchValidation = [
 
     //MIN AGE
 	body('payload.normalSearch.minAge')
-        .trim()
+        .optional()
         .isInt({min:18})
         .withMessage('La edad mínima debe ser numerica, igual o más 18'),
     //MAX AGE
     body('payload.normalSearch.maxAge')
-        .trim()
+        .optional()
         .isInt()
         .withMessage('La edad máxima debe ser numerica'),
     //LOCATION
     body('payload.normalSearch.location')
-        .trim()
+        .optional()
         .isBoolean()
         .withMessage('El campo de localidad debe ser boleano, true en caso de filtrar por cercania'),
 
@@ -44,17 +44,18 @@ const contactSearchValidation = [
 
     //MIN HEIGHT
 	body('payload.expandedSearch.minHeight')
-        .trim()
+        .optional()
         .isInt()
         .withMessage('La altura mínima debe ser un numero entero'),
     //MAX HEIGHT
     body('payload.expandedSearch.maxHeight')
-        .trim()
+        .optional()
         .isInt()
         .withMessage('La altura mínima debe ser un numero entero'),
     //ETHNIA
     body('payload.expandedSearch.ethnia')
         .trim()
+        .optional()
         .isIn([
             'Asiática',
             'Caucásico',
@@ -66,6 +67,7 @@ const contactSearchValidation = [
     //RELIGION
     body('payload.expandedSearch.religion')
         .trim()
+        .optional()
         .isIn([
             'Cristianísmo',
             'Judaísmo',
@@ -77,6 +79,7 @@ const contactSearchValidation = [
     //RELATIONSHIP
     body('payload.expandedSearch.relationship')
         .trim()
+        .optional()
         .isIn([
             'Soltería',
             'Divorcio',
@@ -88,11 +91,13 @@ const contactSearchValidation = [
     //SMOKING
     body('payload.expandedSearch.smoking')
         .trim()
+        .optional()
         .isBoolean()
         .withMessage('El campo de fumar ha de ser booleano'),
     //DRINKING
     body('payload.expandedSearch.drinking')
         .trim()
+        .optional()
         .isBoolean()
         .withMessage('El campo de beber ha de ser booleano'),
 

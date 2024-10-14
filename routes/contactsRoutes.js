@@ -8,18 +8,24 @@ const searchContacts = require('../controllers/contacts/searchContacts');
 
 const {verifyToken} = require('../middleware/authToken');
 
+const {validate} = require('../middleware/validate');
+const {
+    contactIdNewValidation,
+    contactIdDeleteValidation,
+    contactSearchValidation
+} = require('../validations/contactsValidations');
 
 const router = express.Router();
 
-router.patch('/request', verifyToken, requestContact);
+router.patch('/request', verifyToken,contactIdNewValidation, validate, requestContact);
 
-router.patch('/add', verifyToken, addContact);
+router.patch('/add', verifyToken,contactIdNewValidation, validate, addContact);
 
-router.patch('/remove', verifyToken, deleteContact);
+router.patch('/remove', verifyToken,contactIdDeleteValidation, validate, deleteContact);
 
 router.get('/list', verifyToken, getContactList);
 
-router.post('/search', verifyToken, searchContacts);
+router.post('/search', verifyToken, contactSearchValidation, validate, searchContacts);
 
 
 module.exports = router;
