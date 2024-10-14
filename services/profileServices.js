@@ -25,7 +25,8 @@ async function dbFindProfileId(id){
 //Find by user
 async function dbFindProfile(userId){
     try{
-        const profile = await Profile.findOne({userId});
+        const profile = await Profile.findOne({userId},
+            'bio age genre orentation special location profilePicture coverPhoto');
         return profile;
     }catch (err){
         console.error('ERROR : DB-FIND PROFILE BY USER ID : ',err);
@@ -36,7 +37,11 @@ async function dbFindProfile(userId){
 //Update by user id
 async function dbUpdateProfile(userId,profile){
     try{
-        const updtProfile = await Profile.findOneAndUpdate({userId}, profile, {new: true});
+        const updtProfile = await Profile.findOneAndUpdate(
+            {userId}, 
+            profile, 
+            {new: true}
+        ).select('bio age genre orentation special location profilePicture coverPhoto');
         return updtProfile;
     }catch (err){
         console.error('ERROR : DB-UPDATE PROFILE : ',err);

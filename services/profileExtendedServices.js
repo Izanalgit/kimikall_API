@@ -25,7 +25,7 @@ async function dbFindProfileExtendedId(id){
 //Find by user
 async function dbFindProfileExtended(userId){
     try{
-        const profile = await ProfileExtended.findOne({userId});
+        const profile = await ProfileExtended.findOne({userId},'-userId');
         return profile;
     }catch (err){
         console.error('ERROR : DB-FIND EXTENDED PROFILE BY USER ID : ',err);
