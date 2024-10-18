@@ -1,4 +1,4 @@
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const Contact = require('../models/Contact');
 const {blockCheck} = require('../utils/blockCheck');
 
@@ -37,28 +37,28 @@ async function addSolicitationContact (userId, contactUserId){
         throw new Error ('that user is allready a contact');
 
     //Transaction db
-    // const session = await mongoose.startSession();
-    // session.startTransaction();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
     try{
         await Contact.findOneAndUpdate({userId},{
             $addToSet: {contactsSolicitation : { contactId: contactUserId }}
-        }/*,{session}*/)
+        },{session})
         await Contact.findOneAndUpdate({contactUserId},{
             $addToSet: {contactsRequest : { contactId: userId }}
-        }/*,{session}*/)
+        },{session})
 
-        // await session.commitTransaction();
+        await session.commitTransaction();
 
     }catch (err){
-        // await session.abortTransaction();
+        await session.abortTransaction();
 
         console.error('ERROR : DB-ADD SOLICITATION CONTACT USER : ',err);
         throw new Error ('can not add that solicitation contact');
     } 
-    // finally {
-    //     session.endSession();
-    // }
+    finally {
+        session.endSession();
+    }
 }
 
 //Add user to contact list (accepts request)
@@ -70,59 +70,59 @@ async function addContactUser (userId, contactUserId){
         throw new Error ('can not find that user');
 
     //Transaction db
-    // const session = await mongoose.startSession();
-    // session.startTransaction();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
     try{
         await Contact.findOneAndUpdate({userId},{
             $addToSet: {contacts : { contactId: contactUserId }},
             $pull: {contactsRequest : { contactId: contactUserId }}
-        }/*,{session}*/)
+        },{session})
         await Contact.findOneAndUpdate({contactUserId},{
             $addToSet: {contacts : { contactId: userId }},
             $pull: {contactsSolicitation : { contactId: userId }},
-        }/*,{session}*/)
+        },{session})
 
-        // await session.commitTransaction();
+        await session.commitTransaction();
 
     }catch (err){
-        // await session.abortTransaction();
+        await session.abortTransaction();
 
         console.error('ERROR : DB-ADD CONTACT USER : ',err);
         throw new Error ('can not add that user contact');
     }
-    // finally {
-    //     session.endSession();
-    // }
+    finally {
+        session.endSession();
+    }
 }
 
 //Remove users from bouth contact lists
 async function removeContactUser (userId, contactUserId) {
 
     //Transaction db
-    // const session = await mongoose.startSession();
-    // session.startTransaction();
+    const session = await mongoose.startSession();
+    session.startTransaction();
 
     try{
         await Contact.findOneAndUpdate({userId},{
             $pull: {contacts : { contactId: contactUserId }}
-        }/*,{session}*/)
+        },{session})
 
         await Contact.findOneAndUpdate({contactUserId},{
             $pull: {contacts : { contactId : userId}}
-        }/*,{session}*/)
+        },{session})
 
-        // await session.commitTransaction();
+        await session.commitTransaction();
     
     }catch (err){
-        // await session.abortTransaction();
+        await session.abortTransaction();
 
         console.error('ERROR : DB-REMOVE CONTACT USERS : ',err);
         throw new Error ('can not remove that user contact');
     } 
-    // finally{
-    //      await session.endSession();
-    // }
+    finally{
+         await session.endSession();
+    }
 }
 
 //Get contacts user lists
