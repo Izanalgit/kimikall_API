@@ -26,7 +26,7 @@ async function dbFindProfileId(id){
 async function dbFindProfile(userId){
     try{
         const profile = await Profile.findOne({userId},
-            'bio age genre orentation special location profilePicture coverPhoto');
+            '-_id bio age genre orentation special location profilePicture coverPhoto updatedAt');
         return profile;
     }catch (err){
         console.error('ERROR : DB-FIND PROFILE BY USER ID : ',err);
