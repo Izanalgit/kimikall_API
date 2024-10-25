@@ -1,10 +1,12 @@
 const {dbUpdateUser} = require('../../services/userServices');
+const {passHasher} = require('../../utils/passwordHasher');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
     
     const userId = req.user;
     const payload = req.body.payload;
+
     
     try{
 
@@ -22,7 +24,12 @@ module.exports = async (req,res) => {
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});
 
-        const user = {...payload};
+        const hashedPaswd = pswd ? await passHasher(pswd) : undefined ;
+
+        const user = {
+            ...(name && { name }),
+            ...(hashedPaswd && { pswd: hashedPaswd })
+        }
 
         //DB query
         const updtUser = await dbUpdateUser(userId,user);
