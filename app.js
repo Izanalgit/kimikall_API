@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const dbConnect = require('./config/dataBaseConfig');
 const {handleSocketConnection} = require('./websockets/handlers');
@@ -14,6 +15,11 @@ const HOST = process.env.HOST || 'http://localhost';
 
 // DB Connection
 dbConnect();
+
+//SECURITY
+app.use(cors({
+    exposedHeaders: ['Authorization'] 
+}));
 
 //JSON PARSER
 app.use(express.urlencoded({extended:true}));
