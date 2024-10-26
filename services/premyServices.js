@@ -7,7 +7,8 @@ const dbCreatePremyDocument = async (userId) => {
     try {
         const newPremyDoc = await Premy.create({ 
             userId, 
-            tokens: []
+            tokens: [],
+            premium: []
         });
         return newPremyDoc;
     } catch (err) {
@@ -36,13 +37,15 @@ const addMessageToken = async (userId) => {
 const addPremiumToken = async (userId) => {
 
     const isPremy = await Premy.findOne({userId})
-    if(isPremy.premium.token)
+    if(isPremy.premium[0].premiumToken)
         throw new Error('is allready premium');
 
     try {
         const token = genPremyToken(userId,true);
 
-        await Premy.findOneAndUpdate({userId},{premium:{token:token}})
+        await Premy.findOneAndUpdate({userId},{
+            $addToSet: {premium : {premiumToken:token}}
+        })
         
         return true;
     } catch (err) {
@@ -92,10 +95,10 @@ const countPremiumToken = async (userId) => {
     try {
         const premyDoc = await Premy.findOne({userId});
 
-        if (!premyDoc || !premyDoc.premium || !premyDoc.premium.token)
+        if (!premyDoc || !premyDoc.premium[0] || !premyDoc.premium[0].premiumToken)
             return 0
 
-        const premiumExpiry = new Date(premyDoc.premium.createdAt);
+        const premiumExpiry = new Date(premyDoc.premium[0].createdAt);
         premiumExpiry.setDate(premiumExpiry.getDate() + 30);
 
         const timeLeft = Math.round((premiumExpiry - new Date()) / (1000 * 60 * 60 * 24));

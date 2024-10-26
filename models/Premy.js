@@ -9,25 +9,26 @@ const premySchema = new mongoose.Schema({
     tokens : [{
         token : {
             type:String,
-            require: true
+            unique:true,
+            sparse: true,
         },
         createdAt: { 
             type: Date,
             default: Date.now 
         }
     }],
-    premium : {
-        token : {
+    premium : [{
+        premiumToken : { 
             type:String,
-            require: true,
-            unique:true
+            unique:true,
+            sparse: true,
         },
         createdAt: { 
             type: Date,
             expires: 2628288, //1 month 
             default: Date.now 
         },
-    }
+    }]
 })
 
 const Premy = mongoose.model('premy',premySchema);
