@@ -35,37 +35,50 @@ module.exports =async (req,res)=>{
         const newContactsDoc = dbCreateContactDocument(newUserId);
         const newPremyDoc = dbCreatePremyDocument(newUserId);
 
-        let profileCreated,profileExtendedCreated,contactsDocCreated,premyDocCreated;
 
-        try{
-            [
-                profileCreated, 
-                profileExtendedCreated, 
-                contactsDocCreated,
-                premyDocCreated
-            ] = await Promise.all([
+        try {
+            await Promise.all([
                 newProfile,
                 newProfileExtended,
                 newContactsDoc,
                 newPremyDoc
             ]);
-        }catch(err){
-            //Rollback if somethings fails
-            await dbDeleteUser (newUserId);
-            
-            if(profileCreated) await dbDeleteProfile(newUserId);
-            else msgErr.errConsole('PRE USER','CREATION USER','new profile doc');
+        } catch (err) {
+            msgErr.errConsole('NEW USER','CREATE USER DOCUMENTS', err);
 
-            if(profileExtendedCreated) await deleteContactList(newUserId);
-            else msgErr.errConsole('PRE USER','CREATION USER','new extended profile doc');
-             
-            if(contactsDocCreated) await dbDeleteProfileExtended(newUserId);
-            else msgErr.errConsole('PRE USER','CREATION USER','new contacts doc');
+            // Rollback 
+            try {
+                await dbDeletePremyDocument(newUserId);
+                console.log('Rollback: Premy document deleted');
+            } catch (error) {
+                msgErr.errConsole('NEW USER','DELETE PREMY DOC', error);
+            }
+            try {
+                await deleteContactList(newUserId);
+                console.log('Rollback: Contacts document deleted');
+            } catch (error) {
+                msgErr.errConsole('NEW USER','DELETE CONTACTS DOC', error);
+            }
+            try {
+                await dbDeleteProfileExtended(newUserId);
+                console.log('Rollback: Profile Extended document deleted');
+            } catch (error) {
+                msgErr.errConsole('NEW USER','DELETE PROFILE EXT DOC', error);
+            }
+            try {
+                await dbDeleteProfile(newUserId);
+                console.log('Rollback: Profile document deleted');
+            } catch (error) {
+                msgErr.errConsole('NEW USER','DELETE PROFILE DOC', error);
+            }
+            try {
+                await dbDeleteUser(newUserId);
+                console.log('Rollback: User document deleted');
+            } catch (error) {
+                msgErr.errConsole('NEW USER','DELETE USER DOC', error);
+            }
 
-            if(premyDocCreated) await dbDeletePremyDocument(newUserId);
-            else msgErr.errConsole('PRE USER','CREATION USER','new premy doc');
-
-            throw new Error('user creation documents');
+            throw new Error('when creating user documents');
         }
 
         return res
