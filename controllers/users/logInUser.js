@@ -6,34 +6,17 @@ const {msgErr} = require('../../utils/errorsMessages');
 module.exports = async (req,res) => {
     
     const payload = req.body.payload;
+    const {email,pswd} = payload;
+    let user;
+    let tokenSaved;
+    let tokenDB;
 
     try{
-
-        //No payload check
-        if(!payload)
-            return res
-                .status(400)
-                .json({messageErr:msgErr.errPayloadRequired});
-
-        const {email,pswd} = payload;
-
-        //Incorrect payload check
-        if(!email || !pswd)
-            return res
-                .status(400)
-                .json({messageErr:msgErr.errPayloadIncorrect});
-
-            
-        //User check
-        const user = await dbFindUserLogIn(email,pswd);
-        if(!user)
-            return res
-                .status(401)
-                .json({messageErr:msgErr.errCredentialsIncorrect});
-
+        //Find user
+        user = await dbFindUserLogIn(email,pswd);
         
         //Check if there is a token allready from the user
-        const tokenSaved = await findToken (user._id);
+        tokenSaved = await findToken (user._id);
         if(tokenSaved) 
             return res
                 .status(409)
@@ -41,11 +24,8 @@ module.exports = async (req,res) => {
         
         //Generate token
         const token = genToken(user._id);
-        const tokenDB = await saveToken(user._id,token);
-        if(!tokenDB) return res
-                .status(500)
-                .json({messageErr:msgErr.errToken}); 
-
+        tokenDB = await saveToken(user._id,token);
+        
         //Return 200 and headers
         return res
             .status(200)
@@ -57,6 +37,31 @@ module.exports = async (req,res) => {
 
     }catch(err){
         msgErr.errConsole('A USER','LOG IN ACOUNT', err);
+        
+        //No payload check
+        if(!payload)
+            return res
+                .status(400)
+                .json({messageErr:msgErr.errPayloadRequired});
+        
+        //Incorrect payload check
+        if(!email || !pswd)
+            return res
+                .status(400)
+                .json({messageErr:msgErr.errPayloadIncorrect});
+
+        //User check
+        if(!user)
+            return res
+                .status(401)
+                .json({messageErr:msgErr.errCredentialsIncorrect});
+
+        //Generate token check
+        if(!tokenDB)
+             return res
+                .status(500)
+                .json({messageErr:msgErr.errToken}); 
+
         return res
             .status(500)
             .json({messageErr:msgErr.errApiInternal});
