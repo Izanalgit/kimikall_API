@@ -21,7 +21,9 @@ describe('TEST OF CONTACTS END ROUTES',()=>{
     let user2Id;
 
     let toRequest;
+    let toRequest1;
     let toAdd;
+    let toDecline;
     let toRemove;
 
     let tokenAuth;
@@ -42,7 +44,9 @@ describe('TEST OF CONTACTS END ROUTES',()=>{
         user2Id = user2Obj._id;
 
         toRequest = {payload:{newContact:user0Id}};
+        toRequest1 = {payload:{newContact:user2Id}};
         toAdd = {payload:{newContact:user1Id}};
+        toDecline = {payload:{newContact:user1Id,decline:true}};
         toRemove = {payload:{removeContact:user1Id}};
 
         tokenAuth = genToken(user0Id);
@@ -67,6 +71,15 @@ describe('TEST OF CONTACTS END ROUTES',()=>{
             .patch('/api/contacts/request')
             .set('Authorization', tokenAuth1)
             .send(toRequest)
+            .expect(200)
+            .expect ((res)=>{
+                expect(res.body.message).toBeDefined();
+            })
+
+        await agent
+            .patch('/api/contacts/request')
+            .set('Authorization', tokenAuth1)
+            .send(toRequest1)
             .expect(200)
             .expect ((res)=>{
                 expect(res.body.message).toBeDefined();
@@ -104,6 +117,25 @@ describe('TEST OF CONTACTS END ROUTES',()=>{
         expect(contactList.requests.length).toBe(0);
         expect(contactList.contacts.length).toBeGreaterThan(0);
         expect(contactList.contacts[0].contactId).toEqual(user1Id);
+    })
+
+    it('DECLINE : Should decline contact request', async ()=>{
+
+        await agent
+            .patch('/api/contacts/add')
+            .set('Authorization', tokenAuth2)
+            .send(toDecline)
+            .expect(200)
+            .expect ((res)=>{
+                expect(res.body.message).toBeDefined();
+            })
+
+        const contactList = await getContactList(user2Id);
+
+        expect(contactList).toBeDefined(); 
+        expect(contactList.requests.length).toBe(0);
+        expect(contactList.contacts.length).toBe(0);
+
     })
 
     it('LIST : Should get the contacts list',async ()=>{

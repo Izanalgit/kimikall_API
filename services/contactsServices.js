@@ -96,6 +96,34 @@ async function addContactUser (userId, contactUserId){
     }
 }
 
+//Not add user to contact list (Decline request)
+async function declineContactUser (userId, contactUserId){
+
+    //Transaction db
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try{
+        await Contact.findOneAndUpdate({userId},{
+            $pull: {contactsRequest : { contactId: contactUserId }}
+        },{session})
+        await Contact.findOneAndUpdate({contactUserId},{
+            $pull: {contactsSolicitation : { contactId: userId }},
+        },{session})
+
+        await session.commitTransaction();
+
+    }catch (err){
+        await session.abortTransaction();
+
+        console.error('ERROR : DB-DECLINE CONTACT USER : ',err);
+        throw new Error ('can not decline that user request');
+    }
+    finally {
+        session.endSession();
+    }
+}
+
 //Remove users from bouth contact lists
 async function removeContactUser (userId, contactUserId) {
 
@@ -155,6 +183,7 @@ module.exports = {
     dbCreateContactDocument,
     addContactUser,
     addSolicitationContact,
+    declineContactUser,
     removeContactUser,
     getContactList,
     deleteContactList
