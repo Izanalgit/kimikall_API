@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const Contact = require('../models/Contact');
+const User = require('../models/User');
 const {blockCheck} = require('../utils/blockCheck');
-
-//TRANSACTIONS DISABLED 
 
 //Creates contacts documents of user
 async function dbCreateContactDocument(userId) {
@@ -36,16 +35,34 @@ async function addSolicitationContact (userId, contactUserId){
     if(allreadyContacts)
         throw new Error ('that user is allready a contact');
 
+    // Get contact names
+    const [user, contactUser] = await Promise.all([
+        User.findById(userId, "name"), 
+        User.findById(contactUserId, "name")
+    ]);
+    if (!user || !contactUser) 
+        throw new Error("user or contact user not found");
+
     //Transaction db
     const session = await mongoose.startSession();
     session.startTransaction();
 
     try{
         await Contact.findOneAndUpdate({userId},{
-            $addToSet: {contactsSolicitation : { contactId: contactUserId }}
+            $addToSet: {
+                contactsSolicitation : { 
+                    contactId: contactUserId,
+                    contactName: contactUser.name  
+                }
+            }
         },{session})
         await Contact.findOneAndUpdate({contactUserId},{
-            $addToSet: {contactsRequest : { contactId: userId }}
+            $addToSet: {
+                contactsRequest : { 
+                    contactId: userId,
+                    contactName: user.name 
+                }
+            }
         },{session})
 
         await session.commitTransaction();
@@ -69,17 +86,35 @@ async function addContactUser (userId, contactUserId){
     if(blocked)
         throw new Error ('can not find that user');
 
+    // Get contact names
+    const [user, contactUser] = await Promise.all([
+        User.findById(userId, "name"), 
+        User.findById(contactUserId, "name")
+    ]);
+    if (!user || !contactUser) 
+        throw new Error("user or contact user not found");
+
     //Transaction db
     const session = await mongoose.startSession();
     session.startTransaction();
 
     try{
         await Contact.findOneAndUpdate({userId},{
-            $addToSet: {contacts : { contactId: contactUserId }},
+            $addToSet: {
+                contacts : { 
+                    contactId: contactUserId , 
+                    contactName: contactUser.name
+                }
+            },
             $pull: {contactsRequest : { contactId: contactUserId }}
         },{session})
         await Contact.findOneAndUpdate({contactUserId},{
-            $addToSet: {contacts : { contactId: userId }},
+            $addToSet: {
+                contacts : { 
+                    contactId: userId ,
+                    contactName: user.name
+                }
+            },
             $pull: {contactsSolicitation : { contactId: userId }},
         },{session})
 

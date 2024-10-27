@@ -12,6 +12,10 @@ const contactSchema = new mongoose.Schema({
                 type: mongoose.Schema.ObjectId, 
                 required: true 
             },
+            contactName:{
+                type: String,
+                required: true
+            },
             createdAt: { 
                 type: Date, 
                 default: Date.now 
@@ -24,6 +28,10 @@ const contactSchema = new mongoose.Schema({
                 type: mongoose.Schema.ObjectId, 
                 required: true 
             },
+            contactName:{
+                type: String,
+                required: true
+            },
             createdAt: { 
                 type: Date, 
                 default: Date.now 
@@ -35,6 +43,10 @@ const contactSchema = new mongoose.Schema({
             contactId: { 
                 type: mongoose.Schema.ObjectId, 
                 required: true 
+            },
+            contactName:{
+                type: String,
+                required: true
             },
             createdAt: { 
                 type: Date, 
