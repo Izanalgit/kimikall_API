@@ -12,6 +12,19 @@ module.exports = async (req,res) => {
     let tokenDB;
 
     try{
+
+        //No payload check
+        if(!payload)
+            return res
+                .status(400)
+                .json({messageErr:msgErr.errPayloadRequired});
+        
+        //Incorrect payload check
+        if(!email || !pswd)
+            return res
+                .status(400)
+                .json({messageErr:msgErr.errPayloadIncorrect});
+
         //Find user
         user = await dbFindUserLogIn(email,pswd);
         
@@ -37,18 +50,6 @@ module.exports = async (req,res) => {
 
     }catch(err){
         msgErr.errConsole('A USER','LOG IN ACOUNT', err);
-        
-        //No payload check
-        if(!payload)
-            return res
-                .status(400)
-                .json({messageErr:msgErr.errPayloadRequired});
-        
-        //Incorrect payload check
-        if(!email || !pswd)
-            return res
-                .status(400)
-                .json({messageErr:msgErr.errPayloadIncorrect});
 
         //User check
         if(!user)
