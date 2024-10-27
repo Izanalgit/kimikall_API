@@ -56,7 +56,7 @@ async function addSolicitationContact (userId, contactUserId){
                 }
             }
         },{session})
-        await Contact.findOneAndUpdate({contactUserId},{
+        await Contact.findOneAndUpdate({userId:contactUserId},{
             $addToSet: {
                 contactsRequest : { 
                     contactId: userId,
@@ -108,7 +108,7 @@ async function addContactUser (userId, contactUserId){
             },
             $pull: {contactsRequest : { contactId: contactUserId }}
         },{session})
-        await Contact.findOneAndUpdate({contactUserId},{
+        await Contact.findOneAndUpdate({userId:contactUserId},{
             $addToSet: {
                 contacts : { 
                     contactId: userId ,
@@ -142,7 +142,7 @@ async function declineContactUser (userId, contactUserId){
         await Contact.findOneAndUpdate({userId},{
             $pull: {contactsRequest : { contactId: contactUserId }}
         },{session})
-        await Contact.findOneAndUpdate({contactUserId},{
+        await Contact.findOneAndUpdate({userId:contactUserId},{
             $pull: {contactsSolicitation : { contactId: userId }},
         },{session})
 
@@ -171,7 +171,7 @@ async function removeContactUser (userId, contactUserId) {
             $pull: {contacts : { contactId: contactUserId }}
         },{session})
 
-        await Contact.findOneAndUpdate({contactUserId},{
+        await Contact.findOneAndUpdate({userId: contactUserId},{
             $pull: {contacts : { contactId : userId}}
         },{session})
 
