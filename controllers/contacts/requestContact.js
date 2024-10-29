@@ -1,4 +1,4 @@
-const {addSolicitationContact} = require('../../services/contactsServices');
+const {addSolicitationContact,addContactUser,contactRequestCheck} = require('../../services/contactsServices');
 const {dbFindUserId} = require('../../services/userServices');
 const {sendFriendRequest} = require('../../websockets/events');
 const connections = require('../../websockets/connections');
@@ -8,6 +8,8 @@ module.exports = async (req,res) => {
     
     const userId = req.user;
     const payload = req.body.payload;
+
+    let newContactObj;
 
     try{
 
@@ -25,18 +27,15 @@ module.exports = async (req,res) => {
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});
 
-        //User to add check ID
-        const newContactObj = await dbFindUserId(newContact);
-
-        if(!newContactObj) 
-            return res
-                .status(401)
-                .json({messageErr:msgErr.errUserNotFound('New Contact')})
-        
+        newContactObj = await dbFindUserId(newContact);        
         const newContactId = newContactObj._id;
 
-        //Send request to contact  
-        await addSolicitationContact(userId,newContactId);
+        //Send request to contact or accept match
+        const alreadyRequest = await contactRequestCheck(newContactId,userId);
+        if (alreadyRequest)
+            await addContactUser(userId,newContactId);
+        else
+            await addSolicitationContact(userId,newContactId);
 
         //WebSockete notify
         sendFriendRequest(connections, userId, newContactId);
@@ -47,6 +46,13 @@ module.exports = async (req,res) => {
 
     }catch (err) {
         msgErr.errConsole(userId,'ADD NEW CONTACT REQUEST', err);
+
+        //User to add check ID
+        if(!newContactObj) 
+            return res
+                .status(401)
+                .json({messageErr:msgErr.errUserNotFound('New Contact')})
+
         return res
             .status(500)
             .json({messageErr:msgErr.errApiInternal});
