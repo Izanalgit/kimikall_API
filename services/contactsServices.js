@@ -19,6 +19,23 @@ async function dbCreateContactDocument(userId) {
     }
 }
 
+//Check if allready are contacts
+async function contactCheck (userId,contactUserId) {
+    const alreadyContacts = await Contact.findOne({
+        userId,
+        "contacts.contactId" : contactUserId
+    })
+    return Boolean(alreadyContacts);
+}
+//Check if allready are contact request
+async function contactRequestCheck (userId,contactUserId) {
+    const alreadyRequest = await Contact.findOne({
+        userId,
+        "contactsSolicitation.contactId" : contactUserId
+    })
+    return Boolean(alreadyRequest);
+}
+
 //Add user to solicitation list and ask contact
 async function addSolicitationContact (userId, contactUserId){
 
@@ -28,13 +45,14 @@ async function addSolicitationContact (userId, contactUserId){
         throw new Error ('can not find that user');
 
     //Check if allready are contacts
-    const allreadyContacts = await Contact.findOne({
-        userId,
-        "contacts.contactId" : contactUserId
-    })
-    if(allreadyContacts)
+    const alreadyContacts = await contactCheck(userId,contactUserId)
+    if(alreadyContacts)
         throw new Error ('that user is allready a contact');
 
+    //Check if allready are requests
+    const alreadyRequest = await contactRequestCheck(userId,contactUserId)
+    if(alreadyRequest) return;
+        
     // Get contact names
     const [user, contactUser] = await Promise.all([
         User.findById(userId, "name"), 
@@ -80,6 +98,11 @@ async function addSolicitationContact (userId, contactUserId){
 
 //Add user to contact list (accepts request)
 async function addContactUser (userId, contactUserId){
+
+    //Check if allready are contacts
+    const alreadyContacts = await contactCheck(userId,contactUserId)
+    if(alreadyContacts)
+        throw new Error ('that user is allready a contact');
 
     //Check if blocked
     const blocked = await blockCheck(userId,contactUserId);
@@ -216,6 +239,8 @@ async function deleteContactList(userId) {
 
 module.exports = {
     dbCreateContactDocument,
+    contactCheck,
+    contactRequestCheck,
     addContactUser,
     addSolicitationContact,
     declineContactUser,

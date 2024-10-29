@@ -38,15 +38,15 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
         //Normal search profiles
         const profiles = await Profile.find(
             {...filterObj},
-            'userId age genre orentation special location bio profilePicture'
+            '-_id userId age genre orentation special location bio profilePicture'
         );
         
-        // Block check
+        // Block and itself user check
         const validProfiles = await Promise.all(profiles.map(async (profile) => {
+            if (profile.userId.toString() === userId.toString()) return null;
             const profileUser = await User.findById(profile.userId, 'blockedUsers');
             return profileUser.blockedUsers.includes(userId) ? null : profile;
         }));
-
         const filteredProfiles = validProfiles.filter((profile) => profile !== null);
 
         // Add profile user name
