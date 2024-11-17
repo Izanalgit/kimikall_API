@@ -23,15 +23,17 @@ const msgFormat = async (userId, contactId, messagesRaw) => {
 
         if (message.remit == userId)
             return {
-                'me':message.messageText,
-                'day':date.day,
-                'hour':date.hour
+                sender:'me',
+                content: message.messageText,
+                day:date.day,
+                hour:date.hour
             }
         else 
             return {
-                [contactName]:message.messageText,
-                'day':date.day,
-                'hour':date.hour
+                sender:contactName,
+                content:message.messageText,
+                day:date.day,
+                hour:date.hour
             }
     })
 
