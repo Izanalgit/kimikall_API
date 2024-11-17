@@ -52,7 +52,7 @@ module.exports = async (req,res) => {
             substactToken = await removeMessageToken(userId);
         
         //Token double check
-        if(!substactToken)
+        if(premiumTime === 0 && !substactToken)
             return res
                 .status(402)
                 .json({message:"No tokens left",sended: false});
