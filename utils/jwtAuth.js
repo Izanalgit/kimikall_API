@@ -43,7 +43,7 @@ async function wssTokenAuth(ws,token){
         //User login check
         const sesToken = await findToken(userId);
         if(!sesToken) throw new Error(msgErr.errSession(false));
-        if(sesToken != token) throw new Error(msgErr.errToken);
+        if(sesToken.token != token) throw new Error(msgErr.errToken);
         
         console.log(`USER : ${userId} : WEBSOCKET CONNECT`);
         return userId;        
