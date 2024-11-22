@@ -10,6 +10,7 @@ const {handleSocketConnection} = require('./websockets/handlers');
 require('dotenv').config();
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 8080;
 const HOST = process.env.HOST || 'http://localhost';
 
@@ -28,21 +29,18 @@ app.use(express.json());
 //LOGGER
 app.use(morgan('dev'));
 
+//WEBSOCKET INIT
+const wss = new WebSocket.Server({server});
+wss.on('connection', handleSocketConnection);
+
 //HEALTH
 app.get('/',(req,res)=>res.status(200).send('API IS RUNNING HEALTHY'));
 
 //API ROUTES
 app.use('/api',require('./routes'));
 
-//HTTP SHARED SERVER
-let server = http.createServer(app);
-
-//WEBSOCKET INIT
-const wss = new WebSocket.Server({server});
-wss.on('connection', handleSocketConnection);
-
 //API LISTEN
-server = app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server on ${HOST}:${PORT}`);
 })
 
