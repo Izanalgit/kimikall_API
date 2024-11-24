@@ -52,4 +52,24 @@ async function readMessages(userID0,userID1) {
     }
 }
 
-module.exports = {sendMessage,readMessages}
+// Check read a message by Id
+async function checkMessage(messageId) {
+
+    try{
+
+        if (!messageId) {
+            throw new Error('Invalid message ID');
+        }
+
+        await Message.findOneAndUpdate(
+            {messageId},
+            {read:true}
+        );
+
+    }catch (err){
+        console.error('ERROR : DB-CHECK READ MESSAGE : ',err);
+        throw new Error ('can not check read a message');
+    }
+}
+
+module.exports = {sendMessage,readMessages,checkMessage}
