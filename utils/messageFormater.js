@@ -26,14 +26,17 @@ const msgFormat = async (userId, contactId, messagesRaw) => {
                 sender:'me',
                 content: message.messageText,
                 day:date.day,
-                hour:date.hour
+                hour:date.hour,
+                isRead:message.read
             }
         else 
             return {
                 sender:contactName,
                 content:message.messageText,
                 day:date.day,
-                hour:date.hour
+                hour:date.hour,
+                messageId:message._id,
+                isRead:message.read
             }
     })
 
