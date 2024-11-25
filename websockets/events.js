@@ -18,7 +18,18 @@ function sendNewMessageNoti(connections, senderId, receiverId) {
     }
 }
 
+//Message read notify
+function sendMessageReadNoti(connections, senderId, receiverId) {
+    if (connections[receiverId]) {
+        connections[receiverId].send(JSON.stringify({
+            type: 'IS_READ',
+            from: senderId
+        }));
+    }
+}
+
 module.exports = {
     sendFriendRequest,
-    sendNewMessageNoti
+    sendNewMessageNoti,
+    sendMessageReadNoti
 };

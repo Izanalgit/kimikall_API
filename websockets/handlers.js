@@ -1,5 +1,5 @@
 const connections = require('./connections');
-const {sendFriendRequest,sendNewMessageNoti} = require('./events');
+const {sendFriendRequest,sendNewMessageNoti,sendMessageReadNoti} = require('./events');
 
 const {wssTokenAuth} = require('../utils/jwtAuth');
 const {msgErr} = require('../utils/errorsMessages');
@@ -50,6 +50,9 @@ function handleSocketConnection(ws, req) {
                     break;
                 case 'NEW_MESSAGE':
                     sendNewMessageNoti(connections, userId, parsedMessage.to);
+                    break;
+                case 'IS_READ':
+                    sendMessageReadNoti(connections, userId, parsedMessage.to);
                     break;
                 default:
                     console.log('Unknown message type');
