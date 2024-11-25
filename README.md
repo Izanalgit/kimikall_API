@@ -6,6 +6,8 @@ En construcción ...
 - MESSAGES {headers : Authorization} (key token)
     - READ MESSAGES
         - {params: contact} (userId)
+    * CHECK READ MESSAGES
+        - {params: message} (messageId)
     + SEND MESSAGE
         - {payload:{recep,message}} (userId, string message)
     
