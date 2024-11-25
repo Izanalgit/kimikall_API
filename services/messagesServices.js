@@ -61,10 +61,13 @@ async function checkMessage(messageId) {
             throw new Error('Invalid message ID');
         }
 
-        await Message.findOneAndUpdate(
-            {messageId},
-            {read:true}
+        const message = await Message.findOneAndUpdate(
+            {_id:messageId},
+            {read:true},
+            {new: true}
         );
+
+        return message;
 
     }catch (err){
         console.error('ERROR : DB-CHECK READ MESSAGE : ',err);
