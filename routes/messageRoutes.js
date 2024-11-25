@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/read/:contact', verifyToken, readMessages);
 
-router.patch('/check/:message', verifyToken, checkMessage);
+router.patch('/check', verifyToken, checkMessage);
 
 router.post('/send', verifyToken, messageValidation, validate, sendMessage);
 
