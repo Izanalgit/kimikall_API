@@ -6,29 +6,25 @@ module.exports = async (req,res) => {
     const userId = req.user;
     const tokenType = req.params.tokenType;
 
-    let tokenAdded = false;
-
     try {
         //Incorrect parameters
-        if(!tokenType)
+        if(!tokenType || !["premy","message"].includes(tokenType))
             return res
                 .status(400)
                 .json({messageErr:msgErr.errParamsIncorrect});
 
         if(tokenType === "premy")
-            tokenAdded = await addPremiumToken(userId);
+            await addPremiumToken(userId);
         
         if(tokenType === "message")
-            tokenAdded = await addMessageToken(userId);
-            tokenAdded = await addMessageToken(userId);
-            tokenAdded = await addMessageToken(userId);
-            tokenAdded = await addMessageToken(userId);
-            tokenAdded = await addMessageToken(userId);
+            await addMessageToken(userId);
+            await addMessageToken(userId);
     
-        if(tokenAdded)
-            return res.status(200);
-        else
-            throw new Error('false value on tokenAdded')
+
+        return res
+            .status(200)
+            .json({message:'Completed purchase'});
+
     
     } catch (err) {
         msgErr.errConsole(userId,'PROVISIONAL ADD PREMY TOKENS', err);

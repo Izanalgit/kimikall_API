@@ -37,7 +37,7 @@ const addMessageToken = async (userId) => {
 const addPremiumToken = async (userId) => {
 
     const isPremy = await Premy.findOne({userId})
-    if(isPremy.premium[0].premiumToken)
+    if(isPremy.premium.length > 0)
         throw new Error('is allready premium');
 
     try {
