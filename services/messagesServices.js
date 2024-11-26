@@ -1,4 +1,5 @@
 const Message = require('../models/Message');
+const mongoose = require('mongoose');
 const {blockCheck} = require('../utils/blockCheck');
 
 // Send message with ID
@@ -75,4 +76,29 @@ async function checkMessage(messageId) {
     }
 }
 
-module.exports = {sendMessage,readMessages,checkMessage}
+// Check unread messages
+async function countMessages(userId) {
+
+    try{
+
+        if (!userId) {
+            throw new Error('Invalid user ID on check unread messages');
+        }
+
+        const userObjectId = new mongoose.Types.ObjectId(userId);
+
+        const countMessages = await Message.aggregate([
+            {$match: {recep:userObjectId,read:false}},
+            {$group : {_id:"$remit",count : {$sum:1}}}
+        ]);
+
+        return countMessages.length ?
+            countMessages.map(({_id,count})=>({sender:_id,count})) : [] ;
+
+    }catch (err){
+        console.error('ERROR : DB-COUNT UNREAD MESSAGES : ',err);
+        throw new Error ('can not count messages');
+    }
+}
+
+module.exports = {sendMessage,readMessages,checkMessage,countMessages}
