@@ -6,6 +6,7 @@ En construcción ...
 - MESSAGES {headers : Authorization} (key token)
     - READ MESSAGES
         - {params: contact} (userId)
+    * COUNT UNREAD MESSAGES
     * CHECK READ MESSAGES
         - {params: message} (messageId)
     + SEND MESSAGE
