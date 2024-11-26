@@ -48,6 +48,12 @@ function handleSocketConnection(ws, req) {
                 case 'FRIEND_REQUEST':
                     sendFriendRequest(connections, userId, parsedMessage.to);
                     break;
+                case 'FRIEND_ACCEPT':
+                    sendFriendAccept(connections, userId, parsedMessage.to);
+                    break;
+                case 'FRIEND_REMOVED':
+                    sendFriendRemoved(connections, userId, parsedMessage.to);
+                    break;
                 case 'NEW_MESSAGE':
                     sendNewMessageNoti(connections, userId, parsedMessage.to);
                     break;

@@ -8,6 +8,26 @@ function sendFriendRequest(connections, senderId, receiverId) {
     }
 }
 
+//Friend request accept
+function sendFriendAccept(connections, senderId, receiverId) {
+    if (connections[receiverId]) {
+        connections[receiverId].send(JSON.stringify({
+            type: 'FRIEND_ACCEPT',
+            from: senderId
+        }));
+    }
+}
+
+//Friend removed
+function sendFriendRemoved(connections, senderId, receiverId) {
+    if (connections[receiverId]) {
+        connections[receiverId].send(JSON.stringify({
+            type: 'FRIEND_REMOVED',
+            from: senderId
+        }));
+    }
+}
+
 //New message notify
 function sendNewMessageNoti(connections, senderId, receiverId) {
     if (connections[receiverId]) {
@@ -30,6 +50,8 @@ function sendMessageReadNoti(connections, senderId, receiverId) {
 
 module.exports = {
     sendFriendRequest,
+    sendFriendAccept,
+    sendFriendRemoved,
     sendNewMessageNoti,
     sendMessageReadNoti
 };
