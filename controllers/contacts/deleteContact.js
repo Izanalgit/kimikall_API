@@ -1,5 +1,7 @@
 const {removeContactUser} = require('../../services/contactsServices');
 const {dbFindUserId} = require('../../services/userServices');
+const {sendFriendRemoved} = require('../../websockets/events');
+const connections = require('../../websockets/connections');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -35,6 +37,9 @@ module.exports = async (req,res) => {
 
         //Remove contact user  
         await removeContactUser(userId,removeContactId);
+
+        //WS Notify        
+        sendFriendRemoved(connections,userId,removeContactId);
 
         return res
             .status(200)
