@@ -1,6 +1,6 @@
 const Message = require('../models/Message');
 const mongoose = require('mongoose');
-const {blockCheck} = require('../utils/blockCheck');
+const {blockCheck,contactCheck} = require('../utils/blockCheck');
 
 // Send message with ID
 async function sendMessage(remit,recep,messageText) {
@@ -25,6 +25,16 @@ async function sendMessage(remit,recep,messageText) {
 
 // Read messages from bouth IDs
 async function readMessages(userID0,userID1) {
+
+    //Check if blocked
+    const blocked = await blockCheck(userID0,userID1);
+    if(blocked)
+        throw new Error ('can not find to that user');
+
+    //Check if contact
+    const contact = await contactCheck(userID0,userID1);
+    if(!contact)
+        throw new Error ('that user is no longer contact');
 
     try{
 
