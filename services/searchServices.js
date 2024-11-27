@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Contact = require('../models/Contact');
 const Profile = require('../models/Profile');
 const ProfileExtended = require('../models/ProfileExtended');
 
@@ -8,7 +9,8 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
     try{
 
         const userProfile = await Profile.findOne({userId});
-        const userBlocks = await User.findById(userId,'blockedUsers')
+        const userBlocks = await User.findById(userId,'blockedUsers');
+        const userContacts = await Contact.findOne({userId},'contacts');
         
         //Genre preselection
         let genre;
@@ -27,6 +29,7 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
         //Filter object
         const filterObj = {
             ...(userBlocks.blockedUsers.length !== 0 && {userId:{$nin:userBlocks.blockedUsers}}),
+            ...(userContacts.contacts.length !== 0 && {userId:{$nin:userBlocks.contacts}}),
             special:userProfile.special,
             orentation:userProfile.orentation,
             ...(genre && {genre}),
