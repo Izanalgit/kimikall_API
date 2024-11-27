@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Contact = require('../models/Contact');
 
 const blockCheck = async (user0Id,user1Id) => {
 
@@ -13,4 +14,15 @@ const blockCheck = async (user0Id,user1Id) => {
         return false;
 }
 
-module.exports = {blockCheck};
+const contactCheck = async (user0Id,user1Id) => {
+
+    const contacts = await Contact.findOne({userId:user0Id});
+
+    if(contacts.contacts.map((contactObj)=>(contactObj.contactId).toString()).includes(user1Id))
+        return true;
+    else
+        return false;
+
+}
+
+module.exports = {blockCheck,contactCheck};
