@@ -12,8 +12,10 @@ function genToken(user){
 //Premy Token generator
 function genPremyToken(userId,premy){
 
-    const payloadMessage = {user: userId, type: 'message'};
-    const payloadPremy = {user: userId, type: 'premy'};
+    const timeStamp = new Date().toISOString();
+
+    const payloadMessage = {user: userId, type: 'message', createAt: timeStamp};
+    const payloadPremy = {user: userId, type: 'premy', createAt: timeStamp};
     
     if(premy)
         return jwt.sign(payloadPremy,process.env.PREMY_JWT_SECRET,{expiresIn:'30d'});
