@@ -16,9 +16,10 @@ module.exports = async (req,res) => {
         if(tokenType === "premy")
             await addPremiumToken(userId);
         
-        if(tokenType === "message")
+        if(tokenType === "message"){
             await addMessageToken(userId);
             await addMessageToken(userId);
+        }
     
 
         return res
