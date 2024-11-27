@@ -2,6 +2,8 @@ const {dbFindProfile,dbUpdateProfile} = require('../../services/profileServices'
 const {uploadImage,deleteImage} = require('../../services/imagesServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
+const fs = require('fs/promises');
+
 module.exports = async (req,res) => {
     
     const userId = req.user;
@@ -72,10 +74,15 @@ module.exports = async (req,res) => {
         // Update user profile
         const updatedProfile = await dbUpdateProfile(userId,profile);
 
-        if(updatedProfile)
+        if(updatedProfile){
+
+            //Delete image from temp upload directory
+            await fs.unlink(file.path);
+
             return res
                 .status(200)
                 .json({ message: 'Image updated successfully', updatedProfile });
+        }
     
     } catch (err) {
         msgErr.errConsole(userId,'UPDATE IMAGE', err);
