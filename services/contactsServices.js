@@ -227,6 +227,31 @@ async function getContactList(userId) {
     }
 }
 
+//Update contacts name user
+async function updateNameOnContacts(userId,newName) {
+    try{
+
+        await Contact.updateMany(
+            { 
+                contacts: { 
+                    $elemMatch: { contactId: userId } 
+                } 
+            },
+            {
+                $set: { "contacts.$[elem].contactName": newName }
+            },
+            {
+                arrayFilters: [ { "elem.contactId": userId } ]
+            }
+        );
+
+    }catch (err){
+        console.error('ERROR : DB-UPDATE NAME ON CONTACT USER LIST :',err);
+        throw new Error ('can not update name on contact user list');
+    }
+}
+
+
 //Delete contacts user list
 async function deleteContactList(userId) {
     try{
@@ -246,5 +271,6 @@ module.exports = {
     declineContactUser,
     removeContactUser,
     getContactList,
+    updateNameOnContacts,
     deleteContactList
 }

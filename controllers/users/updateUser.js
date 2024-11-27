@@ -1,5 +1,6 @@
 const {dbUpdateUser} = require('../../services/userServices');
 const {passHasher} = require('../../utils/passwordHasher');
+const {updateNameOnContacts} = require('../../services/contactsServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -33,6 +34,8 @@ module.exports = async (req,res) => {
 
         //DB query
         const updtUser = await dbUpdateUser(userId,user);
+
+        await updateNameOnContacts(userId,user.name);
         
         return res
             .status(200)
