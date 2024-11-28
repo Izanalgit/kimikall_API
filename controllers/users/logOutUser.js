@@ -1,4 +1,5 @@
 const {cleanToken,findToken} = require('../../services/tokenServices');
+const {dbCleanReKey} = require('../../services/pairKeyServices');
 const {dbFindUserId} = require('../../services/userServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
@@ -25,6 +26,10 @@ module.exports = async (req,res) => {
 
         //Delete session token
         const tokenClean = await cleanToken (userId);
+
+        // Clean private re key pass
+        await dbCleanReKey(userId);
+
         if(!tokenClean) 
             return res
                 .status(500)

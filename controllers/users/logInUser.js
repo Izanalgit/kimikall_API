@@ -1,4 +1,5 @@
 const {dbFindUserLogIn} = require('../../services/userServices');
+const {setPrivateKey} = require('../../services/pairKeyServices');
 const {saveToken,findToken} = require('../../services/tokenServices');
 const {genToken} = require('../../utils/jwtAuth');
 const {msgErr} = require('../../utils/errorsMessages');
@@ -38,6 +39,9 @@ module.exports = async (req,res) => {
         //Generate token
         const token = genToken(user._id);
         tokenDB = await saveToken(user._id,token);
+
+        //Generate private key
+        const keys = await setPrivateKey(user._id,pswd)
         
         //Return 200 and headers
         return res
@@ -45,6 +49,12 @@ module.exports = async (req,res) => {
             .set('Authorization',token)
             .json({
                 user:user.name,
+                soloElPuebloSalvaAlPueblo:{
+                    rpk:keys.reEncryptedPrivateKey,
+                    rps:keys.reEncryptedPrivateKeyPassword,
+                    riv:keys.reIv,
+                    rsa:keys.reSalt
+                },
                 message:'Succes on login!'
             })
 
