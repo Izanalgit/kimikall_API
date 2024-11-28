@@ -4,6 +4,8 @@ const {dbCreateProfile,dbDeleteProfile} = require('../../services/profileService
 const {dbCreateProfileExtended,dbDeleteProfileExtended} = require('../../services/profileExtendedServices');
 const {dbCreateContactDocument,deleteContactList} = require('../../services/contactsServices');
 const {dbCreatePremyDocument,dbDeletePremyDocument} = require('../../services/premyServices');
+const {dbCreateKeyDocument,dbDeleteKeyDocument} = require('../../services/pairKeyServices');
+const {passHasher} = require('../../utils/passwordHasher');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports =async (req,res)=>{
@@ -27,13 +29,15 @@ module.exports =async (req,res)=>{
         const email = preUser.email;
         const pswd = preUser.pswd;
 
-        const newUser = await dbCreateUser({name,email,pswd});
+        const hashedPaswd = await passHasher(pswd); //hash user password
+        const newUser = await dbCreateUser({name,email,pswd:hashedPaswd});
         const newUserId = newUser._id;
 
         const newProfile = dbCreateProfile(newUserId);
         const newProfileExtended = dbCreateProfileExtended(newUserId);
         const newContactsDoc = dbCreateContactDocument(newUserId);
         const newPremyDoc = dbCreatePremyDocument(newUserId);
+        const newKeysDoc = dbCreateKeyDocument(newUserId,pswd);
 
 
         try {
@@ -41,12 +45,19 @@ module.exports =async (req,res)=>{
                 newProfile,
                 newProfileExtended,
                 newContactsDoc,
-                newPremyDoc
+                newPremyDoc,
+                newKeysDoc
             ]);
         } catch (err) {
             msgErr.errConsole('NEW USER','CREATE USER DOCUMENTS', err);
 
-            // Rollback 
+            // Rollback
+            try {
+                await dbDeleteKeyDocument(newUserId);
+                console.log('Rollback: Keys document deleted');
+            } catch (error) {
+                msgErr.errConsole('NEW USER','DELETE KEYS DOC', error);
+            } 
             try {
                 await dbDeletePremyDocument(newUserId);
                 console.log('Rollback: Premy document deleted');
