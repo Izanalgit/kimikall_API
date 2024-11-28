@@ -21,6 +21,13 @@ const messageSchema = new mongoose.Schema({
   iv:{
     type: String
   },
+  messageTextRemit: {
+    type: String,
+    required: true
+  },
+  ivRemit:{
+    type: String
+  },
   createdAt: { 
     type: Date, 
     default: Date.now 
@@ -33,19 +40,26 @@ messageSchema.pre('save', function(next) {
   const message = this;
 
   const {encryptedData, iv} = encryptText(message.messageText);
+  const {encryptedData:dataRemit, iv:ivRemit} = encryptText(message.messageTextRemit);
 
-  if (!iv) {
+  if (!iv || !ivRemit) {
     return next(new Error('IV generation failed'));
   }
 
   message.messageText = encryptedData;
   message.iv = iv;
 
+  message.messageTextRemit = dataRemit;
+  message.ivRemit = ivRemit;
+
   next();
 })
 
 messageSchema.methods.decryptMessage = function() {
   return decryptText(this.messageText, this.iv);
+}
+messageSchema.methods.decryptMessageRemit = function() {
+  return decryptText(this.messageTextRemit, this.ivRemit);
 }
 
 const Message = mongoose.model('Message', messageSchema);

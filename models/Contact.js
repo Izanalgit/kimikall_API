@@ -16,6 +16,10 @@ const contactSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
+            contactPublicKey:{
+                type: String,
+                required: true
+            },
             createdAt: { 
                 type: Date, 
                 default: Date.now 
