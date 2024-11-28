@@ -24,7 +24,7 @@ const msgFormat = async (userId, contactId, messagesRaw) => {
         if (message.remit == userId)
             return {
                 sender:'me',
-                content: message.messageText,
+                content: message.messageTextRemit,
                 day:date.day,
                 hour:date.hour,
                 isRead:message.read
