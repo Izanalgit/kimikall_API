@@ -17,10 +17,10 @@ module.exports = async (req,res) => {
                 .status(400)
                 .json({messageErr:msgErr.errPayloadRequired});
 
-        const {recep,message} = payload;
+        const {recep,message,messageRemit} = payload;
 
         //Incorrect payload
-        if(!recep && !message)
+        if(!recep && !message && !messageRemit)
             return res
                 .status(400)
                 .json({messageErr:msgErr.errPayloadIncorrect});
@@ -58,7 +58,7 @@ module.exports = async (req,res) => {
                 .json({message:"No tokens left",sended: false});
 
         //Send Message
-        await sendMessage(userId,recepId,message);
+        await sendMessage(userId,recepId,message,messageRemit);
         
         //WebSocket notify
         sendNewMessageNoti(connections,userId,recepId);
