@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Contact = require('../models/Contact');
 const User = require('../models/User');
 const {blockCheck} = require('../utils/blockCheck');
+const {sendPublicveKey} = require('./pairKeyServices');
 
 //Creates contacts documents of user
 async function dbCreateContactDocument(userId) {
@@ -117,6 +118,10 @@ async function addContactUser (userId, contactUserId){
     if (!user || !contactUser) 
         throw new Error("user or contact user not found");
 
+    // Get contact public key
+    const publicKeyUser = await sendPublicveKey(userId);
+    const publicKeyContact = await sendPublicveKey(contactUserId);
+
     //Transaction db
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -126,7 +131,8 @@ async function addContactUser (userId, contactUserId){
             $addToSet: {
                 contacts : { 
                     contactId: contactUserId , 
-                    contactName: contactUser.name
+                    contactName: contactUser.name,
+                    contactPublicKey: publicKeyContact
                 }
             },
             $pull: {contactsRequest : { contactId: contactUserId }}
@@ -135,7 +141,8 @@ async function addContactUser (userId, contactUserId){
             $addToSet: {
                 contacts : { 
                     contactId: userId ,
-                    contactName: user.name
+                    contactName: user.name,
+                    contactPublicKey: publicKeyUser
                 }
             },
             $pull: {contactsSolicitation : { contactId: userId }},
@@ -251,6 +258,31 @@ async function updateNameOnContacts(userId,newName) {
     }
 }
 
+//Update contacts public key user
+async function updatePublicKeyOnContacts(userId) {
+    try{
+        const publicKeyUser = await sendPublicveKey(userId);
+
+        await Contact.updateMany(
+            { 
+                contacts: { 
+                    $elemMatch: { contactId: userId } 
+                } 
+            },
+            {
+                $set: { "contacts.$[elem].contactPublicKey": publicKeyUser }
+            },
+            {
+                arrayFilters: [ { "elem.contactId": userId } ]
+            }
+        );
+
+    }catch (err){
+        console.error('ERROR : DB-UPDATE PUBLIC KEY ON CONTACT USER LIST :',err);
+        throw new Error ('can not update public key on contact user list');
+    }
+}
+
 
 //Delete contacts user list
 async function deleteContactList(userId) {
@@ -272,5 +304,6 @@ module.exports = {
     removeContactUser,
     getContactList,
     updateNameOnContacts,
+    updatePublicKeyOnContacts,
     deleteContactList
 }

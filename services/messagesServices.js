@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const {blockCheck,contactCheck} = require('../utils/blockCheck');
 
 // Send message with ID
-async function sendMessage(remit,recep,messageText) {
+async function sendMessage(remit,recep,messageText,messageTextRemit) {
 
     //Check if blocked
     const blocked = await blockCheck(remit,recep);
@@ -11,7 +11,7 @@ async function sendMessage(remit,recep,messageText) {
         throw new Error ('can not find to that user');
 
     //Send message
-    const messageObjt = {remit,recep,messageText}
+    const messageObjt = {remit,recep,messageText,messageTextRemit}
 
     try{
         const newMessage = await Message.create(messageObjt);
@@ -52,7 +52,8 @@ async function readMessages(userID0,userID1) {
         //Decrypt messages
         const decryptedMessages = messages.map(msg => ({ 
             ...msg.toObject(), //to plain object just in case
-            messageText : msg.decryptMessage()
+            messageText : msg.decryptMessage(),
+            messageTextRemit : msg.decryptMessageRemit()
         }));
         
         return decryptedMessages;
