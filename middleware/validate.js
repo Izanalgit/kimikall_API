@@ -3,6 +3,8 @@ const { validationResult } = require('express-validator');
 //Validator Result Middleware -> put last of validator middlewares 
 
 const validate = (req, res, next) => {
+    console.log(req.body)
+
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) 
         return res
