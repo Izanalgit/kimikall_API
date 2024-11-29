@@ -67,7 +67,10 @@ async function setPrivateKey(userId,password) {
 
         await ReKey.create({userId,reEncrypted});
 
-        return updatedReKeys
+        return {
+            ...updatedReKeys,
+            publicKey : keyData.publicKey
+        }
 
     } catch (err) {
         console.error('ERROR : DB-GENERATE RE KEYS : ', err);
