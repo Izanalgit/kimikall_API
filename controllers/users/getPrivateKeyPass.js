@@ -1,4 +1,4 @@
-const {sendPrivareKeyPass} = require('../../services/pairKeyServices');
+const {sendPrivareKeyPass,sendPublicveKey} = require('../../services/pairKeyServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -8,9 +8,11 @@ module.exports = async (req,res) => {
     try{
 
         //Get profile user
-        const keys = await sendPrivareKeyPass(userId);   
+        const keys = await sendPrivareKeyPass(userId);
+        const public = await sendPublicveKey(userId);   
 
         const soloElPuebloSalvaAlPueblo={
+            public,
             rps:keys.reEncryptedPrivateKeyPassword,
             riv:keys.reIv,
             rsa:keys.reSalt

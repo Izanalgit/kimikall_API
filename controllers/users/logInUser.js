@@ -50,6 +50,7 @@ module.exports = async (req,res) => {
             .json({
                 user:user.name,
                 soloElPuebloSalvaAlPueblo:{
+                    public:keys.publicKey,
                     rpk:keys.reEncryptedPrivateKey,
                     rps:keys.reEncryptedPrivateKeyPassword,
                     riv:keys.reIv,
