@@ -11,6 +11,7 @@ const msgErr = {
     errSession: (logged) => `${er}${logged ? 'Already logged in' : 'Not logged yet'}`,
     errUserNotFound: (user) => `${er}${user ? `${user} user not found` : 'Invalid user'}`,
     errUpdateFile: (file) => `${er}Could not update ${file}`,
+    errDeleteFile: (file) => `${er}Could not delete ${file}`,
     errGeneral: (error) => `${er}${error}`,
     errConsole: (userID,msg,error) => {
         console.log(`--- USER ID : ${userID} : ${msg} ---`);
