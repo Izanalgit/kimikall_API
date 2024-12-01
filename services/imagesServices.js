@@ -4,12 +4,12 @@ const cloudinary = require('../config/cloudinaryConfig');
 
 const imgsTransformations = {
     profile:[
-        { width: 400, height: 400, crop: "limit" }, 
+        { width: 300, height: 300, crop: "limit" }, 
         { quality: "auto" }, 
         { fetch_format: "auto" }
     ],
     cover:[
-        { width: 1200, height: 600, crop: "limit" }, 
+        { width: 800, height: 400, crop: "limit" }, 
         { quality: "auto" }, 
         { fetch_format: "auto" }
     ]
