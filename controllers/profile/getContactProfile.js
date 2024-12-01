@@ -17,9 +17,9 @@ module.exports = async (req,res) => {
                 .json({messageErr:msgErr.errParamsIncorrect});
 
         //Check contact
-        const contacts = await getContactList(userId);
+        const {contacts} = await getContactList(userId);
 
-        if(!contacts.some((contact) => contact.contactId == contactId))
+        if(!contacts.find((contact) => contact.contactId == contactId))
             return res
                 .status(401)
                 .json({messageErr:msgErr.errUserNotFound('Contact')})
