@@ -16,6 +16,9 @@ const contactSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
+            profilePicture : {
+                type:String
+            },
             contactPublicKey:{
                 type: String,
                 required: true
@@ -36,6 +39,9 @@ const contactSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
+            profilePicture : {
+                type:String
+            },
             createdAt: { 
                 type: Date, 
                 default: Date.now 
@@ -51,6 +57,9 @@ const contactSchema = new mongoose.Schema({
             contactName:{
                 type: String,
                 required: true
+            },
+            profilePicture : {
+                type:String
             },
             createdAt: { 
                 type: Date, 

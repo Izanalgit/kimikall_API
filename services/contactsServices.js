@@ -3,6 +3,7 @@ const Contact = require('../models/Contact');
 const User = require('../models/User');
 const {blockCheck} = require('../utils/blockCheck');
 const {sendPublicveKey} = require('./pairKeyServices');
+const {dbFindProfile} = require('./profileServices');
 
 //Creates contacts documents of user
 async function dbCreateContactDocument(userId) {
@@ -62,6 +63,10 @@ async function addSolicitationContact (userId, contactUserId){
     if (!user || !contactUser) 
         throw new Error("user or contact user not found");
 
+    // Get contact images
+    const imageUser = await dbFindProfile(userId)
+    const imageContact = await dbFindProfile(contactUserId);
+
     //Transaction db
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -71,7 +76,8 @@ async function addSolicitationContact (userId, contactUserId){
             $addToSet: {
                 contactsSolicitation : { 
                     contactId: contactUserId,
-                    contactName: contactUser.name  
+                    contactName: contactUser.name,
+                    profilePicture : imageContact.profilePicture  
                 }
             }
         },{session})
@@ -79,7 +85,8 @@ async function addSolicitationContact (userId, contactUserId){
             $addToSet: {
                 contactsRequest : { 
                     contactId: userId,
-                    contactName: user.name 
+                    contactName: user.name,
+                    profilePicture : imageUser.profilePicture 
                 }
             }
         },{session})
@@ -118,6 +125,10 @@ async function addContactUser (userId, contactUserId){
     if (!user || !contactUser) 
         throw new Error("user or contact user not found");
 
+    // Get contact images
+    const imageUser = await dbFindProfile(userId)
+    const imageContact = await dbFindProfile(contactUserId);
+
     // Get contact public key
     const publicKeyUser = await sendPublicveKey(userId);
     const publicKeyContact = await sendPublicveKey(contactUserId);
@@ -132,6 +143,7 @@ async function addContactUser (userId, contactUserId){
                 contacts : { 
                     contactId: contactUserId , 
                     contactName: contactUser.name,
+                    profilePicture : imageContact.profilePicture,
                     contactPublicKey: publicKeyContact
                 }
             },
@@ -142,6 +154,7 @@ async function addContactUser (userId, contactUserId){
                 contacts : { 
                     contactId: userId ,
                     contactName: user.name,
+                    profilePicture : imageUser.profilePicture,
                     contactPublicKey: publicKeyUser
                 }
             },
