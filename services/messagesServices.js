@@ -24,7 +24,7 @@ async function sendMessage(remit,recep,messageText,messageTextRemit) {
 }
 
 // Read messages from bouth IDs
-async function readMessages(userID0,userID1) {
+async function readMessages(userID0, userID1, limit = 10, beforeDate = null) {
 
     //Check if blocked
     const blocked = await blockCheck(userID0,userID1);
@@ -42,12 +42,23 @@ async function readMessages(userID0,userID1) {
             throw new Error('Invalid user IDs on read messages');
         }
 
-        const messages = await Message.find({
-            $or:[
-                {remit:userID0,recep:userID1},
-                {remit:userID1,recep:userID0}
+        // Construct query
+        const query = {
+            $or: [
+                { remit: userID0, recep: userID1 },
+                { remit: userID1, recep: userID0 }
             ]
-        }).sort({createdAt: 1})
+        };
+
+        // Add `beforeDate` condition if provided
+        if (beforeDate) {
+            query.createdAt = { $lt: new Date(beforeDate) };
+        }
+
+        // Fetch messages
+        const messages = await Message.find(query)
+            .sort({ createdAt: -1 })
+            .limit(limit);
         
         //Decrypt messages
         const decryptedMessages = messages.map(msg => ({ 
