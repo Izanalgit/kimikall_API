@@ -37,22 +37,23 @@ module.exports = async (req,res) => {
 
         //Premy tokens
         const premiumTime = await countPremiumToken(userId);
+        const premiumTimeRecep = await countPremiumToken(recepId);
         const msgTokens =  await countMessageToken(userId);
 
         let substactToken;
 
         //Premium and tokens check
-        if(premiumTime === 0 && msgTokens === 0)
+        if(premiumTime === 0 && premiumTimeRecep === 0 && msgTokens === 0)
             return res
                 .status(402)
                 .json({message:"No tokens or premium left",sended: false});
 
         //Message token substact if not premium
-        if(premiumTime === 0 && msgTokens > 0)
+        if(premiumTime === 0 && premiumTimeRecep === 0 && msgTokens > 0)
             substactToken = await removeMessageToken(userId);
         
         //Token double check
-        if(premiumTime === 0 && !substactToken)
+        if(premiumTime === 0 && premiumTimeRecep === 0 && !substactToken)
             return res
                 .status(402)
                 .json({message:"No tokens left",sended: false});
