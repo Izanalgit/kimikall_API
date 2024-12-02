@@ -29,7 +29,7 @@ module.exports = async (req,res) => {
         //WS Notify        
         sendMessageReadNoti(connections,userId,senderid);
 
-        return res.status(200);
+        return res.status(200).json({message:'Readed succesfully'});
 
     
     } catch (err) {
