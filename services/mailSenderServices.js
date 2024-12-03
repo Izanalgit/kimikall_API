@@ -1,5 +1,5 @@
 const sgMail = require('@sendgrid/mail');
-const {sendgridConfig,verificationEmail} = require('../config/sendgridConfig');
+const {sendgridConfig,verificationEmail,forgottenPassEmail} = require('../config/sendgridConfig');
 
 sgMail.setApiKey(sendgridConfig.apiKey);
 
@@ -27,4 +27,28 @@ const sendVerificationEmail = async (email, key) => {
     }
 }
 
-module.exports = {sendVerificationEmail}
+const sendRecoverEmail = async (email, key) => {
+
+    if (!sendgridConfig.apiKey || !sendgridConfig.sender) {
+        console.error('ERROR : DB-SEND RECOVER EMAIL : missing key or sender');
+        throw new Error('recover email not sended');
+    }
+    
+    const recoverMsg = {
+        to: email,
+        from: sendgridConfig.sender,
+        subject: forgottenPassEmail.subject,
+        text: forgottenPassEmail.text(key),
+        html: forgottenPassEmail.html(key),
+    };
+
+    try {
+        await sgMail.send(recoverMsg);
+        return true;
+    } catch (err) {
+        console.error('ERROR : DB-SEND RECOVER EMAIL : ',err.response?.body?.errors || err.message);
+        throw new Error ('recover email not sended');
+    }
+}
+
+module.exports = {sendVerificationEmail,sendRecoverEmail}
