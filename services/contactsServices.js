@@ -271,10 +271,12 @@ async function updateNameOnContacts(userId,newName) {
     }
 }
 
-//Update contacts public key user
-async function updatePublicKeyOnContacts(userId) {
+//Update contacts public key user - DEPRECATED
+async function updatePublicKeyOnContacts(userId,newPublicKey) {
     try{
-        const publicKeyUser = await sendPublicveKey(userId);
+
+        if(!newPublicKey)
+            throw new Error ('needed new public key');
 
         await Contact.updateMany(
             { 
@@ -283,7 +285,7 @@ async function updatePublicKeyOnContacts(userId) {
                 } 
             },
             {
-                $set: { "contacts.$[elem].contactPublicKey": publicKeyUser }
+                $set: { "contacts.$[elem].contactPublicKey": newPublicKey }
             },
             {
                 arrayFilters: [ { "elem.contactId": userId } ]
