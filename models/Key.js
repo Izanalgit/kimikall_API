@@ -22,17 +22,6 @@ const keySchema = new mongoose.Schema({
     salt: { 
         type: String, 
         required: true 
-    },
-    reEncrypted:{
-        reEncryptedPrivateKeyPassword: { 
-            type: String, 
-        },
-        reIv: { 
-            type: String, 
-        },
-        reSalt: { 
-            type: String, 
-        },   
     }
 });
 
