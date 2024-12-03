@@ -133,6 +133,19 @@ async function dbDeleteKeyDocument(userId) {
     }
 }
 
+// Get private key from user id
+async function getPrivate(userId) {
+    try {
+        const keyDoc = await Key.findOne({userId})
+
+        return keyDoc
+
+    } catch (err) {
+        console.error('ERROR : DB-GET KEY DOCUMENT : ', err);
+        throw new Error('can not get key document');
+    }
+}
+
 module.exports = {
     dbCreateKeyDocument,
     dbUpdateKeyDocument,
@@ -140,5 +153,6 @@ module.exports = {
     sendPublicveKey,
     sendPrivareKeyPass,
     dbCleanReKey,
-    dbDeleteKeyDocument
+    dbDeleteKeyDocument,
+    getPrivate
 }
