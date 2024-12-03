@@ -7,6 +7,7 @@ const checkMessage = require('../controllers/messages/checkMessage');
 const sendMessage = require('../controllers/messages/sendMessage');
 
 const {verifyToken} = require('../middleware/authToken');
+const {filterMessage} = require('../middleware/validateMessage');
 
 const {validate} = require('../middleware/validate');
 const {messageValidation} = require('../validations/messageValidations');
@@ -21,7 +22,7 @@ router.get('/count', verifyToken, countMessages);
 
 router.patch('/check', verifyToken, checkMessage);
 
-router.post('/send', verifyToken, messageValidation, validate, sendMessage);
+router.post('/send', verifyToken, filterMessage, messageValidation, validate, sendMessage);
 
 
 module.exports = router;
