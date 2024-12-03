@@ -5,7 +5,6 @@ const {dbCreateProfileExtended,dbDeleteProfileExtended} = require('../../service
 const {dbCreateContactDocument,deleteContactList} = require('../../services/contactsServices');
 const {dbCreatePremyDocument,dbDeletePremyDocument} = require('../../services/premyServices');
 const {dbCreateKeyDocument,dbDeleteKeyDocument} = require('../../services/pairKeyServices');
-const {passHasher} = require('../../utils/passwordHasher');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports =async (req,res)=>{
@@ -29,15 +28,14 @@ module.exports =async (req,res)=>{
         const email = preUser.email;
         const pswd = preUser.pswd;
 
-        const hashedPaswd = await passHasher(pswd); //hash user password
-        const newUser = await dbCreateUser({name,email,pswd:hashedPaswd});
+        const newUser = await dbCreateUser({name,email,pswd});
         const newUserId = newUser._id;
 
         const newProfile = dbCreateProfile(newUserId);
         const newProfileExtended = dbCreateProfileExtended(newUserId);
         const newContactsDoc = dbCreateContactDocument(newUserId);
         const newPremyDoc = dbCreatePremyDocument(newUserId);
-        const newKeysDoc = dbCreateKeyDocument(newUserId,pswd);
+        const newKeysDoc = dbCreateKeyDocument(newUserId);
 
 
         try {

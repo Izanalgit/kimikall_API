@@ -1,6 +1,4 @@
 const {dbFindUser,dbUpdateUser} = require('../../services/userServices');
-const {updatePublicKeyOnContacts} = require('../../services/contactsServices');
-const {dbUpdateKeyDocument} = require('../../services/pairKeyServices');
 const {dbFindForgotten,dbDeleteForgotten} = require('../../services/forgottenServices');
 const {passHasher} = require('../../utils/passwordHasher');
 const {msgErr} = require('../../utils/errorsMessages');
@@ -39,10 +37,6 @@ module.exports = async (req,res) => {
 
             // DB updates
             await dbUpdateUser(userId,{pswd: hashedPaswd});
-
-            // Change private key and update contacts docs
-            await dbUpdateKeyDocument(userId,pswd);
-            await updatePublicKeyOnContacts(userId);
 
             // Delete forgotten pass doc
             await dbDeleteForgotten(recoverKeyDoc._id);

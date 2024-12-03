@@ -41,7 +41,7 @@ module.exports = async (req,res) => {
         tokenDB = await saveToken(user._id,token);
 
         //Generate private key
-        const keys = await setPrivateKey(user._id,pswd)
+        const keys = await setPrivateKey(user._id)
         
         //Return 200 and headers
         return res

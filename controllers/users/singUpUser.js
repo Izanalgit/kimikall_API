@@ -1,5 +1,6 @@
 const {dbCreatePreUser, dbDeletePreUser} = require('../../services/preUserServices');
 const {sendVerificationEmail} = require('../../services/mailSenderServices');
+const {passHasher} = require('../../utils/passwordHasher');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports =async (req,res)=>{
@@ -30,12 +31,13 @@ module.exports =async (req,res)=>{
                 .json({messageErr:msgErr.errPayloadIncorrect});
         
         //Create pre user
-        const newUser = await dbCreatePreUser({name,email,pswd});
+        const hashedPaswd = await passHasher(pswd); //hash user password
+        const newUser = await dbCreatePreUser({name,email,pswd:hashedPaswd});
 
         //Send verification mail to user
         const newUserKey = newUser.key;
    
-        const verificationEmailSended = sendVerificationEmail(email,newUserKey);
+        const verificationEmailSended = await sendVerificationEmail(email,newUserKey);
 
         if(verificationEmailSended)
             return res
