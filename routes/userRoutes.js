@@ -9,6 +9,8 @@ const deleteUser = require('../controllers/users/deleteUser');
 const logInUser = require('../controllers/users/logInUser');
 const logOutUser = require('../controllers/users/logOutUser');
 const getKey = require('../controllers/users/getPrivateKeyPass');
+const getRecoverKey = require('../controllers/users/forgottenPassGet');
+const recoverUser = require('../controllers/users/forgottenPassChange');
 
 const {validate} = require('../middleware/validate');
 const {
@@ -32,6 +34,10 @@ router.post('/login', credentialsValidation, validate, logInUser);
 router.post('/logout', verifyToken, logOutUser);
 
 router.get('/rekey', verifyToken, getKey);
+
+router.post('/forgotten', getRecoverKey);
+
+router.post('/recover', recoverUser);
 
 
 module.exports = router;
