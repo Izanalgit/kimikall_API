@@ -24,10 +24,10 @@ function randomPassword() {
 
 
 // Private key encrypt
-function encryptPrivateKey(privateKey, userPassword) {
+function encryptPrivateKey(privateKey, masterPass) {
 
-    const password = userPassword
-        ? userPassword
+    const password = masterPass
+        ? masterPass
         : randomPassword();
 
     const salt = crypto.randomBytes(16).toString('hex');
@@ -39,7 +39,7 @@ function encryptPrivateKey(privateKey, userPassword) {
     let encrypted = cipher.update(privateKey, 'utf8', 'hex');
     encrypted += cipher.final('hex');
     
-    if(userPassword)
+    if(masterPass)
         return { encryptedPrivateKey: encrypted, iv: iv.toString('hex'), salt };
     else
         return { 
