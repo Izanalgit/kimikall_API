@@ -30,4 +30,12 @@ function decryptText(encryptedData, ivHex){
     return messageBase64;
 }
 
-module.exports = {encryptText, decryptText};
+function validationMessageDecrypt(encryptedMessage, privateKey) {
+        
+    const bufferMessage = Buffer.from(encryptedMessage, 'base64');
+    const decryptedMessage = crypto.privateDecrypt(privateKey, bufferMessage);
+    
+    return decryptedMessage.toString('utf8');
+}
+
+module.exports = {encryptText, decryptText, validationMessageDecrypt};
