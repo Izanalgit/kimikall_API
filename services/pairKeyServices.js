@@ -3,8 +3,10 @@ const ReKey = require('../models/ReKey');
 
 const {generateKeyPair,encryptPrivateKey,decryptPrivateKey} = require('../utils/pairKeys');
 
+const password = process.env.MASTER_PAIR_KEY;
+
 // Create Key documents
-async function dbCreateKeyDocument(userId,password) {
+async function dbCreateKeyDocument(userId) {
     try {
 
         const { publicKey, privateKey } = generateKeyPair();
@@ -26,9 +28,10 @@ async function dbCreateKeyDocument(userId,password) {
     }
 }
 
-// Update Key document
-async function dbUpdateKeyDocument(userId,password) {
+// Update Key document - DEPRECATED
+async function dbUpdateKeyDocument(userId) {
     try {
+        await ReKey.findOneAndDelete({userId});
 
         const { publicKey, privateKey } = generateKeyPair();
         const { encryptedPrivateKey, iv, salt } = encryptPrivateKey(privateKey, password);
@@ -51,7 +54,7 @@ async function dbUpdateKeyDocument(userId,password) {
 }
 
 // Generate and send private key with temporal password
-async function setPrivateKey(userId,password) {
+async function setPrivateKey(userId) {
     try {
 
         const keyData = await Key.findOne({userId});
