@@ -23,6 +23,7 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
             genre = userProfile.genre === 'Hombre'?'Mujer':'Hombre';
 
         //Age filter
+        const actualYear = new Date().getFullYear();
         const minAge = filterSearch.minAge || null;
         const maxAge = filterSearch.maxAge || null;
 
@@ -33,8 +34,8 @@ async function searchProfiles(userId,filterSearch,advancedSearch){
             special:userProfile.special,
             orentation:userProfile.orentation,
             ...(genre && {genre}),
-            ...(minAge && { age:{$gte: minAge} }),
-            ...(maxAge && { age:{$lte: maxAge} }),
+            ...(minAge && { age:{$lte: (actualYear - minAge)} }),
+            ...(maxAge && { age:{$gte: (actualYear - maxAge)} }),
             ...(filterSearch.location && { location:userProfile.location })
         }
 
