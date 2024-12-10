@@ -7,8 +7,23 @@ const profileValidation = [
     //MIN AGE
 	body('payload.profile.age')
         .optional()
-        .isInt({min:18})
-        .withMessage('La edad debe ser numerica, igual o más 18'),
+        .isInt()
+        .withMessage('La edad debe ser un número entero.')
+        .custom(value => {
+            const year = value.toString();
+            const firstChars = year.slice(0, 2);
+
+            if (year.length !== 4 || (firstChars !== '19' && firstChars !== '20')) {
+                throw new Error('Debes escribir un año de nacimiento válido (ej. 1990, 2001).');
+            }
+
+            const minBirthYear = new Date().getFullYear() - 18;
+            if (value > minBirthYear) {
+                throw new Error('Debes ser mayor de 18 años.');
+            }
+
+            return true;
+        }),
     //GENRE
     body('payload.profile.genre')
         .trim()
