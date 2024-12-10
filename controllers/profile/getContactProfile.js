@@ -1,6 +1,7 @@
 const {dbFindProfile} = require('../../services/profileServices');
 const {dbFindProfileExtended} = require('../../services/profileExtendedServices');
 const {getContactList} = require('../../services/contactsServices');
+const {countPremiumToken} = require('../../services/premyServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -16,10 +17,12 @@ module.exports = async (req,res) => {
                 .status(400)
                 .json({messageErr:msgErr.errParamsIncorrect});
 
+        //Check premy
+        const premiumTime = await countPremiumToken(userId);
         //Check contact
         const {contacts} = await getContactList(userId);
 
-        if(!contacts.find((contact) => contact.contactId == contactId))
+        if(!contacts.find((contact) => contact.contactId == contactId) && premiumTime < 1)
             return res
                 .status(401)
                 .json({messageErr:msgErr.errUserNotFound('Contact')})
