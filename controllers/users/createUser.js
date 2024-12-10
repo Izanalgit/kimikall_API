@@ -5,6 +5,7 @@ const {dbCreateProfileExtended,dbDeleteProfileExtended} = require('../../service
 const {dbCreateContactDocument,deleteContactList} = require('../../services/contactsServices');
 const {dbCreatePremyDocument,dbDeletePremyDocument} = require('../../services/premyServices');
 const {dbCreateKeyDocument,dbDeleteKeyDocument} = require('../../services/pairKeyServices');
+const registHtml = require('../../utils/registHtml');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports =async (req,res)=>{
@@ -92,13 +93,13 @@ module.exports =async (req,res)=>{
 
         return res
             .status(201)
-            .json({name:newUser.name,email:newUser.email});
+            .send(registHtml(newUser.name).succes);
 
     }catch(err){
         msgErr.errConsole('NEW USER','CREATE USER', err);
         return res
             .status(500)
-            .json({messageErr:msgErr.errApiInternal});
+            .send(registHtml().error);
     }
         
 };
