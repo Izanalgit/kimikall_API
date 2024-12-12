@@ -123,4 +123,19 @@ async function countMessages(userId) {
     }
 }
 
-module.exports = {sendMessage,readMessages,checkMessage,countMessages}
+//Remove messages when delete user
+async function dbRemoveMessages(userId) {
+    try{
+        await Message.deleteMany({
+            $or: [
+                { remit: userId },
+                { recep: userId }
+            ]
+        });
+    }catch (err){
+        console.error('ERROR : DB-REMOVE MESSAGES : ',err);
+        throw new Error ('can not remove messages');
+    }
+}
+
+module.exports = {sendMessage,readMessages,checkMessage,countMessages,dbRemoveMessages}
