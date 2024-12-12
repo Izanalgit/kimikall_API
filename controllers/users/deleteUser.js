@@ -1,9 +1,11 @@
 const {dbFindUserLogIn , dbDeleteUser} = require('../../services/userServices');
-const {dbDeleteProfile} = require('../../services/profileServices.js');
+const {dbDeleteProfile , dbFindProfile} = require('../../services/profileServices.js');
 const {deleteContactList} = require('../../services/contactsServices.js');
 const {dbDeleteProfileExtended} = require('../../services/profileExtendedServices.js');
 const {dbDeletePremyDocument} = require('../../services/premyServices.js');
 const {dbDeleteKeyDocument} = require('../../services/pairKeyServices');
+const {dbRemoveMessages} = require('../../services/messagesServices.js');
+const {deleteImage} = require('../../services/imagesServices');
 const {cleanToken} = require('../../services/tokenServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
@@ -27,9 +29,15 @@ module.exports = async (req,res) => {
                 .status(401)
                 .json({messageErr:msgErr.errUserNotFound()})
         }
-    
+
         //Delete user
+        const profile = await dbFindProfile(userId);
         const userDel = await dbDeleteUser(userId);
+
+        if(profile.coverPhotoId)
+            await deleteImage(profile.coverPhotoId);
+        if(profile.profilePictureId)
+            await deleteImage(profile.profilePictureId);
 
         await cleanToken(userId);
         await dbDeleteProfile(userId);
@@ -37,6 +45,7 @@ module.exports = async (req,res) => {
         await dbDeleteProfileExtended(userId);
         await dbDeletePremyDocument(userId);
         await dbDeleteKeyDocument(userId);
+        await dbRemoveMessages(userId);
 
         return res
             .status(200)
