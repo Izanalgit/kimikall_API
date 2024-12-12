@@ -3,6 +3,8 @@ const http = require('http');
 const WebSocket = require('ws');
 const morgan = require('morgan');
 const cors = require('cors');
+const helmet = require('helmet');
+const compression = require('compression');
 
 const dbConnect = require('./config/dataBaseConfig');
 const {handleSocketConnection} = require('./websockets/handlers');
@@ -18,9 +20,11 @@ const HOST = process.env.HOST || 'http://localhost';
 dbConnect();
 
 //SECURITY
-app.use(cors({
-    exposedHeaders: ['Authorization'] 
-}));
+app.use(cors(require('./config/corsConfig')));
+app.use(helmet());
+
+//RESPONSES COMPRESSION
+app.use(compression());
 
 //JSON PARSER
 app.use(express.urlencoded({extended:true}));
