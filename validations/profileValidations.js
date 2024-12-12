@@ -63,7 +63,7 @@ const profileValidation = [
         .optional()
         .isLength({ max: 800})
         .withMessage('La biografía tener como máximo 800 carácteres')
-        .matches(/^[a-zA-Z0-9\s.,'-]*$/)
+        .matches(/^[a-zA-Z0-9\s.,'’\-\u00C0-\u017F¡!¿?()""]*$/)
         .withMessage('La biografía debe ser con carácteres alfanuméricos'),
     //LOCATION
     // body('payload.profile.location')

@@ -1,7 +1,7 @@
 const { body } = require('express-validator');
 const mongoose = require('mongoose');
 
-const forbiddenWords = ['instagram', 'wass', 'watsup', 'elle'];
+const forbiddenWords = ['instagram', 'wass', 'watsup', 'telegram', 'ws', 'puta', 'idiota'];
 
 const messageValidation = [
 	body('payload.recep')
@@ -13,7 +13,7 @@ const messageValidation = [
     body('messageValidation')
         .trim()
         .notEmpty()
-        .matches(/^[a-zA-Z0-9\s.,'-]*$/)
+        .matches(/^[a-zA-Z0-9\s.,'’\-\u00C0-\u017F¡!¿?()""]*$/)
         .withMessage('Se requiere de un cuerpo de mensaje')
         // Phone number filter
         .custom((value) => {
