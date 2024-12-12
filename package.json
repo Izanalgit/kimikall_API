@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --silent --verbose --maxWorkers=1",
     "test:logs": "jest --verbose --maxWorkers=1",
-    "test:watch": "jest --watchALL --maxWorkers=1"
+    "test:watch": "jest --watchALL --maxWorkers=1",
+    "install:audit": "npm install && npm audit fix"
   },
   "keywords": [],
   "author": "Ethan.A",
