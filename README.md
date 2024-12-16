@@ -10,72 +10,72 @@ security (E2EE and AES-256-CBC with IV). API supports user registration with ema
 ## END ROUTES
 
 - **MESSAGES** {headers : Authorization} (key token)
-    - **READ MESSAGES** _GET_
+    - **READ MESSAGES :** _GET_
         - {params: contact} (userId)
-    - **READ OLDER MESSAGES** _GET_
+    - **READ OLDER MESSAGES :** _GET_
         - {params: contact/lastDate} (userId)
-    * **COUNT UNREAD MESSAGES** _GET_
-    * **CHECK READ MESSAGES** _PATCH_
+    * **COUNT UNREAD MESSAGES :** _GET_
+    * **CHECK READ MESSAGES :** _PATCH_
         - {params: message} (messageId)
-    + **SEND MESSAGE** _POST_
+    + **SEND MESSAGE :** _POST_
         - {payload:{recep,message}} (userId, string message)
     
 * **PRIVACY** {headers : Authorization} (key token)
-    - **REPORT ACOUNT**  _POST_
+    - **REPORT ACOUNT :**  _POST_
         - {payload:{reportUser,problem}} (userId, string message)
-    * **BLOCK ACOUNT**  _POST_
+    * **BLOCK ACOUNT :**  _POST_
         - {payload:{blockUser}} (userId)
-    * **GET BLOCKED ACOUNTS** _GET_
-    + **UNBLOCK ACOUNT**  _POST_
+    * **GET BLOCKED ACOUNTS :** _GET_
+    + **UNBLOCK ACOUNT :**  _POST_
         - {payload:{unblockUser}} (userId)
 
 * **USER** {headers : Authorization} (key token)
     - **ACOUNT**
-        - **CREATE USER** _GET_ (no header)
+        - **CREATE USER :** _GET_ (no header)
             - {params: userKey} (token Key)
-        * **UPDATE USER** _PATCH_
+        * **UPDATE USER :** _PATCH_
             - {payload:{name,email,pswd}} (string name, string email, string password)
-        + **DELETE USER** _DELETE_
+        + **DELETE USER :** _DELETE_
             - {payload:{email,pswd}} (string email, string password)
     * **ACCES**
-        - **SING UP** _POST_ (no header)
+        - **SING UP :** _POST_ (no header)
             - {payload:{name,email,pswd}} (string name, string email, string password)
-        * **LOG IN** _POST_
+        * **LOG IN :** _POST_
             - {payload:{email,pswd}} (string email, string password)
-        + **LOG OUT** _POST_
+        + **LOG OUT :** _POST_
     * **RECOVER ACOUNT**
-        - **GET FORGOTEN PASSWORD** _POST_ (no header)
+        - **GET FORGOTEN PASSWORD :** _POST_ (no header)
             - {payload:{email}} (string email)
-        + **CHANGE FORGOTTEN PASSWORD** _POST_ (no header)
+        + **CHANGE FORGOTTEN PASSWORD :** _POST_ (no header)
     + **PAIR KEYS**
-        - **GET PRIVATE KEY PASSWORD** _GET_
+        - **GET PRIVATE KEY PASSWORD :** _GET_
 
 * **PRORFIL** {headers : Authorization} (key token)
-    - **UPDATE PROFIL** _POST_
+    - **UPDATE PROFIL :** _POST_
         - {payload:{profile,extended}} (profile object, extended profile object)
-    * **UPLOAD IMAGE PROFILE** _POST_
+    * **UPLOAD IMAGE PROFILE :** _POST_
         - {params: imageType} (string image type)
         + {file:image} (file image)
-    * **DELETE IMAGE PROFILE** _GET_
+    * **DELETE IMAGE PROFILE :** _GET_
         - {params: imageType} (string image type)
-    * **GET OWN PROFIL** _GET_
-    + **GET CONTACT PROFIL** _GET_
+    * **GET OWN PROFIL :** _GET_
+    + **GET CONTACT PROFIL :** _GET_
         - {params: contact} (userId)
 
 * **CONTACTS** {headers : Authorization} (key token)
-    - **ADD CONTACT**  _PATCH_
+    - **ADD CONTACT :**  _PATCH_
         - {payload:{newContact}} (userId)
-    * **DELTE CONTACT**  _PATCH_
+    * **DELTE CONTACT :**  _PATCH_
         - {payload:{removeContact}} (userId)
-    * **GET CONTACTS** _GET_
-    * **REQUEST CONTACTS**  _PATCH_
+    * **GET CONTACTS :** _GET_
+    * **REQUEST CONTACTS :**  _PATCH_
         - {payload:{newContact}} (userId)
-    + **SEARCH CONTACTS**  _PATCH_
+    + **SEARCH CONTACTS :**  _PATCH_
         - {payload:{normalSearch,expandedSearch}} (search forms)
 
 + **PREMIUM** {headers : Authorization} (key token)
-    - **COUNT TOKENS** _GET_
-    + **PROVISIONAL ADD TOKENS** _GET_
+    - **COUNT TOKENS :** _GET_
+    + **PROVISIONAL ADD TOKENS :** _GET_
         - {params: tokenType} (string token type)
 
 ## WEB SOCKETS
