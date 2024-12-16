@@ -9,72 +9,94 @@ security (E2EE and AES-256-CBC with IV). API supports user registration with ema
 
 ## END ROUTES
 
-- MESSAGES {headers : Authorization} (key token)
-    - READ MESSAGES
+- **MESSAGES** {headers : Authorization} (key token)
+    - **READ MESSAGES** _GET_
         - {params: contact} (userId)
-    - READ OLDER MESSAGES
+    - **READ OLDER MESSAGES** _GET_
         - {params: contact/lastDate} (userId)
-    * COUNT UNREAD MESSAGES
-    * CHECK READ MESSAGES
+    * **COUNT UNREAD MESSAGES** _GET_
+    * **CHECK READ MESSAGES** _PATCH_
         - {params: message} (messageId)
-    + SEND MESSAGE
+    + **SEND MESSAGE** _POST_
         - {payload:{recep,message}} (userId, string message)
     
-* PRIVACY {headers : Authorization} (key token)
-    - REPORT ACOUNT
+* **PRIVACY** {headers : Authorization} (key token)
+    - **REPORT ACOUNT**  _POST_
         - {payload:{reportUser,problem}} (userId, string message)
-    * BLOCK ACOUNT
+    * **BLOCK ACOUNT**  _POST_
         - {payload:{blockUser}} (userId)
-    * GET BLOCKED ACOUNTS
-    + UNBLOCK ACOUNT
+    * **GET BLOCKED ACOUNTS** _GET_
+    + **UNBLOCK ACOUNT**  _POST_
         - {payload:{unblockUser}} (userId)
 
-* USER {headers : Authorization} (key token)
-    - ACOUNT
-        - CREATE USER (no header)
+* **USER** {headers : Authorization} (key token)
+    - **ACOUNT**
+        - **CREATE USER** _GET_ (no header)
             - {params: userKey} (token Key)
-        * UPDATE USER
+        * **UPDATE USER** _PATCH_
             - {payload:{name,email,pswd}} (string name, string email, string password)
-        + DELETE USER
+        + **DELETE USER** _DELETE_
             - {payload:{email,pswd}} (string email, string password)
-    * ACCES
-        - SING UP (no header)
+    * **ACCES**
+        - **SING UP** _POST_ (no header)
             - {payload:{name,email,pswd}} (string name, string email, string password)
-        * LOG IN
+        * **LOG IN** _POST_
             - {payload:{email,pswd}} (string email, string password)
-        + LOG OUT
-    * RECOVER ACOUNT
-        - GET FORGOTEN PASSWORD (no header)
+        + **LOG OUT** _POST_
+    * **RECOVER ACOUNT**
+        - **GET FORGOTEN PASSWORD** _POST_ (no header)
             - {payload:{email}} (string email)
-        + CHANGE FORGOTTEN PASSWORD (no header)
-    + PAIR KEYS
-        - GET PRIVATE KEY PASSWORD
+        + **CHANGE FORGOTTEN PASSWORD** _POST_ (no header)
+    + **PAIR KEYS**
+        - **GET PRIVATE KEY PASSWORD** _GET_
 
-* PRORFIL {headers : Authorization} (key token)
-    - UPDATE PROFIL
+* **PRORFIL** {headers : Authorization} (key token)
+    - **UPDATE PROFIL** _POST_
         - {payload:{profile,extended}} (profile object, extended profile object)
-    * UPLOAD IMAGE PROFILE
+    * **UPLOAD IMAGE PROFILE** _POST_
         - {params: imageType} (string image type)
         + {file:image} (file image)
-    * DELETE IMAGE PROFILE
+    * **DELETE IMAGE PROFILE** _GET_
         - {params: imageType} (string image type)
-    * GET OWN PROFIL
-    + GET CONTACT PROFIL
+    * **GET OWN PROFIL** _GET_
+    + **GET CONTACT PROFIL** _GET_
         - {params: contact} (userId)
 
-* CONTACTS {headers : Authorization} (key token)
-    - ADD CONTACT 
+* **CONTACTS** {headers : Authorization} (key token)
+    - **ADD CONTACT**  _PATCH_
         - {payload:{newContact}} (userId)
-    * DELTE CONTACT
+    * **DELTE CONTACT**  _PATCH_
         - {payload:{removeContact}} (userId)
-    * GET CONTACTS
-    * REQUEST CONTACTS
+    * **GET CONTACTS** _GET_
+    * **REQUEST CONTACTS**  _PATCH_
         - {payload:{newContact}} (userId)
-    + SEARCH CONTACTS
+    + **SEARCH CONTACTS**  _PATCH_
         - {payload:{normalSearch,expandedSearch}} (search forms)
 
-+ TOKEN {headers : Authorization} (key token)
-    - COUNT TOKENS
-    + PROVISIONAL ADD TOKENS
++ **PREMIUM** {headers : Authorization} (key token)
+    - **COUNT TOKENS** _GET_
+    + **PROVISIONAL ADD TOKENS** _GET_
         - {params: tokenType} (string token type)
 
+## WEB SOCKETS
+
+- **FRIEND_REQUEST**
+    - **Description :** Notify to an user when receives a new friendship request.
+    * **Type :** FRIEND_REQUEST
+    + **From :** senderId
+* **FRIEND_ACCEPT**
+    - **Description :** Notify to an user when a contact accepts friendship.
+    * **Type :** FRIEND_ACCEPT
+    + **From :** senderId
+* **FRIEND_REMOVED**
+    - **Description :** Notify to an user when is deleted from contacts list.
+    * **Type :** FRIEND_REMOVED
+    + **From :** senderId
+* **NEW_MESSAGE**
+    - **Description :** Notify to an user when receives a new message.
+    * **Type :** NEW_MESSAGE
+    + **From :** senderId
++ **IS_READ**
+    - **Description :** Notify to an user when one message sended is read.
+    * **Type :** IS_READ
+    + **From :** senderId
