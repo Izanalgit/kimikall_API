@@ -13,7 +13,7 @@ security (E2EE and AES-256-CBC with IV). API supports user registration with ema
     - **READ MESSAGES :** _GET_
         - {params: contact} (userId)
     - **READ OLDER MESSAGES :** _GET_
-        - {params: contact/lastDate} (userId)
+        - {params: contact/lastDate} (userId/date)
     * **COUNT UNREAD MESSAGES :** _GET_
     * **CHECK READ MESSAGES :** _PATCH_
         - {params: message} (messageId)
