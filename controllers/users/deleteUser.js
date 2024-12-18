@@ -3,7 +3,7 @@ const {dbDeleteProfile , dbFindProfile} = require('../../services/profileService
 const {deleteContactList} = require('../../services/contactsServices.js');
 const {dbDeleteProfileExtended} = require('../../services/profileExtendedServices.js');
 const {dbDeletePremyDocument} = require('../../services/premyServices.js');
-const {dbDeleteKeyDocument} = require('../../services/pairKeyServices');
+const {dbDeleteKeyDocument,dbCleanReKey} = require('../../services/pairKeyServices');
 const {dbRemoveMessages} = require('../../services/messagesServices.js');
 const {deleteImage} = require('../../services/imagesServices');
 const {cleanToken} = require('../../services/tokenServices');
@@ -45,6 +45,7 @@ module.exports = async (req,res) => {
         await dbDeleteProfileExtended(userId);
         await dbDeletePremyDocument(userId);
         await dbDeleteKeyDocument(userId);
+        await dbCleanReKey(userId);
         await dbRemoveMessages(userId);
 
         return res
