@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const {app,server} = require('../app.js');
 
 const {dbCreateUser, dbFindUser ,dbDeleteUser} = require('../services/userServices.js');
+const {dbCreateContactDocument,deleteContactList} = require('../services/contactsServices.js')
 const {dbCreateProfile,dbUpdateProfile,dbDeleteProfile} = require('../services/profileServices.js');
 const {dbCreateProfileExtended,dbUpdateProfileExtended,dbDeleteProfileExtended} = require('../services/profileExtendedServices.js');
 const {saveToken,cleanToken} = require('../services/tokenServices.js');
@@ -131,6 +132,13 @@ describe('TEST OF PROFILE SEARCH END ROUTE',()=>{
         
         await saveToken(user0Id,tokenAuth);
 
+        await dbCreateContactDocument(user0Id);
+        await dbCreateContactDocument(user1Id);
+        await dbCreateContactDocument(user2Id);
+        await dbCreateContactDocument(user3Id);
+        await dbCreateContactDocument(user4Id);
+        await dbCreateContactDocument(user5Id);
+
         await dbCreateProfile(user0Id);
         await dbCreateProfile(user1Id);
         await dbCreateProfile(user2Id);
@@ -221,6 +229,13 @@ describe('TEST OF PROFILE SEARCH END ROUTE',()=>{
         await dbDeleteUser(user3Id);
         await dbDeleteUser(user4Id);
         await dbDeleteUser(user5Id);
+
+        await deleteContactList(user0Id);
+        await deleteContactList(user1Id);
+        await deleteContactList(user2Id);
+        await deleteContactList(user3Id);
+        await deleteContactList(user4Id);
+        await deleteContactList(user5Id);
 
         await dbDeleteProfile(user0Id);
         await dbDeleteProfile(user1Id);

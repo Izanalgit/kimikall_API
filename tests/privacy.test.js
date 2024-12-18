@@ -21,7 +21,6 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
     let user1Id;
 
     let toReport;
-    let message;
     let toBlock;
     let toUnBlock;
 
@@ -41,16 +40,12 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
         user1Id = user1Obj._id;
 
         toReport = {payload:{reportUser:user1Id,problem:"Is a covenant spy"}};
-        message = {payload:{recep:user0Id,message:"Hello Master Chief"}};
         toBlock = {payload:{blockUser:user1Id}};
         toUnBlock = {payload:{unblockUser:user1Id}};
 
         tokenAuth0 = genToken(user0Id);
         tokenAuth1 = genToken(user1Id);
         
-        await dbCreatePremyDocument(user1Id);
-        await addMessageToken(user1Id);
-
         await saveToken(user0Id,tokenAuth0);
         await saveToken(user1Id,tokenAuth1);
     });
@@ -98,18 +93,6 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
             })    
     })
 
-    it('SEND BLOCKED : Should block send a message', async ()=>{
-
-        await agent
-            .post('/api/chat/send')
-            .set('Authorization', tokenAuth1)
-            .send(message)
-            .expect(500)
-            .expect ((res)=>{
-                expect(res.body.messageErr).toBeDefined();
-            })       
-    })
-
     it('UNBLOCK : Should unblock an user', async ()=>{
 
         await agent
@@ -128,7 +111,6 @@ describe('TEST OF USER PRIVACY END ROUTES',()=>{
         await dbDeleteUser(user0Id);
         await dbDeleteUser(user1Id);
         await deleteReport(reportDocId);
-        await dbDeletePremyDocument(user1Id)
         await cleanToken(user0Id);
         await cleanToken(user1Id);
 

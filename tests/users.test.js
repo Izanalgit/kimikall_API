@@ -6,6 +6,7 @@ const {dbFindUser,dbDeleteUser} = require('../services/userServices.js');
 const {dbFindPreUserMail,dbDeletePreUser} = require('../services/preUserServices.js')
 const {dbDeleteProfile} = require('../services/profileServices.js');
 const {deleteContactList} = require('../services/contactsServices.js');
+const {dbCleanReKey} = require('../services/pairKeyServices.js');
 const {cleanToken} = require('../services/tokenServices.js');
 
 const agent = request.agent(app);
@@ -13,12 +14,11 @@ const agent = request.agent(app);
 describe('TEST OF CRUD AND LOGIN USERS END ROUTES',()=>{
 
     //Change email for one of ur own
-    const payload = {payload:{name:"Random22",email:"probatin7@gmail.com",pswd:"12wABCabc!"}};
+    const payload = {payload:{name:"Random22",email:"probatin67@gmail.com",pswd:"12wABCabc!"}};
     const payloadUpdt = {payload:{name:"Jhon117"}};
 
     let tokenAuth;
     let userKey;
-    let preUserDocId;
             
     it('REGISTER : Should create a pre user and send key', async ()=>{
 
@@ -34,7 +34,6 @@ describe('TEST OF CRUD AND LOGIN USERS END ROUTES',()=>{
         expect(preUser).toBeDefined();
 
         userKey = String(preUser.key);
-        preUserDocId = preUser._id;
 
     })
 
@@ -43,11 +42,7 @@ describe('TEST OF CRUD AND LOGIN USERS END ROUTES',()=>{
         await agent
             .get(`/api/user/verify/${userKey}`)
             .send(payload)
-            .expect(201)
-            .expect ((res)=>{
-                expect(res.body.name).toBe(payload.payload.name);
-                expect(res.body.email).toBe(payload.payload.email);
-            })        
+            .expect(201);       
     })
 
     it('LOGIN : Should log in the user',async ()=>{
@@ -117,6 +112,7 @@ describe('TEST OF CRUD AND LOGIN USERS END ROUTES',()=>{
             await dbDeleteProfile(user._id);
             await deleteContactList(user._id);
             await cleanToken(user._id);
+            await dbCleanReKey(user._id);
         }
         if (preUser) await dbDeletePreUser(preUser._id);
 

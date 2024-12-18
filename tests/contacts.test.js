@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const {app,server} = require('../app.js');
 
 const {dbCreateUser, dbFindUser ,dbDeleteUser} = require('../services/userServices.js');
-const {getContactList,deleteContactList,dbCreateContactDocument} = require('../services/contactsServices.js')
+const {getContactList,deleteContactList,dbCreateContactDocument} = require('../services/contactsServices.js');
+const {dbCreateProfile,dbDeleteProfile} = require('../services/profileServices.js');
+const {dbCreateKeyDocument,dbDeleteKeyDocument} = require('../services/pairKeyServices.js')
 const {addBlockedUser} = require('../services/privacyServices.js');
 const {saveToken,cleanToken} = require('../services/tokenServices.js');
 const {genToken} = require('../utils/jwtAuth.js');
@@ -62,6 +64,14 @@ describe('TEST OF CONTACTS END ROUTES',()=>{
         await dbCreateContactDocument(user0Id);
         await dbCreateContactDocument(user1Id);
         await dbCreateContactDocument(user2Id);
+
+        await dbCreateKeyDocument(user0Id);
+        await dbCreateKeyDocument(user1Id);
+        await dbCreateKeyDocument(user2Id);
+
+        await dbCreateProfile(user0Id);
+        await dbCreateProfile(user1Id);
+        await dbCreateProfile(user2Id);
         
     });
      
@@ -182,6 +192,14 @@ describe('TEST OF CONTACTS END ROUTES',()=>{
         await deleteContactList(user0Id);
         await deleteContactList(user1Id);
         await deleteContactList(user2Id);
+
+        await dbDeleteProfile(user0Id);
+        await dbDeleteProfile(user1Id);
+        await dbDeleteProfile(user2Id);
+
+        await dbDeleteKeyDocument(user0Id);
+        await dbDeleteKeyDocument(user1Id);
+        await dbDeleteKeyDocument(user2Id);
 
         await mongoose.connection.close();
         server.close();

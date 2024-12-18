@@ -1,5 +1,7 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 const {app,server} = require('../app.js');
 
 const {dbCreateUser, dbFindUser ,dbDeleteUser} = require('../services/userServices.js');
@@ -49,6 +51,8 @@ describe('TEST OF PROFILE END ROUTES',()=>{
     
     let tokenAuth;
 
+    let filePath;
+
     beforeAll(async () => {
         await dbCreateUser(user0);
         await dbCreateUser(user1);
@@ -65,6 +69,9 @@ describe('TEST OF PROFILE END ROUTES',()=>{
         await dbCreateProfile(user0Id);
         await dbCreateProfileExtended(user0Id);
         
+        const uploadDir = path.join(__dirname, '../uploads');
+        filePath = path.join(uploadDir, 'randomimage.jpg');
+        fs.writeFileSync(filePath, '');
     });
             
     it('BIO : Should upload bio to user profile', async ()=>{
@@ -129,6 +136,9 @@ describe('TEST OF PROFILE END ROUTES',()=>{
         await cleanToken(user0Id);
         await dbDeleteProfile(user0Id);
         await dbDeleteProfileExtended(user0Id);
+
+        if (fs.existsSync(filePath)) 
+            fs.unlinkSync(filePath);
 
         await mongoose.connection.close();
         server.close();
