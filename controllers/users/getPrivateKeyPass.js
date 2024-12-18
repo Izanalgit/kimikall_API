@@ -9,10 +9,10 @@ module.exports = async (req,res) => {
 
         //Get profile user
         const keys = await sendPrivareKeyPass(userId);
-        const public = await sendPublicveKey(userId);   
+        const publicKey = await sendPublicveKey(userId);   
 
         const soloElPuebloSalvaAlPueblo={
-            public,
+            publicKey,
             rps:keys.reEncryptedPrivateKeyPassword,
             riv:keys.reIv,
             rsa:keys.reSalt
