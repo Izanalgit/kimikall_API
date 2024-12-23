@@ -1,4 +1,5 @@
 const {dbFindProfile,dbUpdateProfile} = require('../../services/profileServices');
+const {updateImageOnContacts} = require('../../services/contactsServices');
 const {deleteImage} = require('../../services/imagesServices');
 const {msgErr} = require('../../utils/errorsMessages');
 
@@ -36,6 +37,9 @@ module.exports = async (req,res) => {
             // Update profile objt with null image fields
             profile.profilePicture = null;
             profile.profilePictureId = null;
+
+            // Upadte contacts user profile image with null
+            await updateImageOnContacts(userId,null);
 
         //COVER IMAGE
         } else if (imageType === 'cover') {
