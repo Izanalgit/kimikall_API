@@ -47,8 +47,10 @@ security (E2EE and AES-256-CBC with IV). API supports user registration with ema
         - **GET FORGOTEN PASSWORD :** _POST_ (no header)
             - {payload:{email}} (string email)
         + **CHANGE FORGOTTEN PASSWORD :** _POST_ (no header)
-    + **PAIR KEYS**
+    * **PAIR KEYS**
         - **GET PRIVATE KEY PASSWORD :** _GET_
+    + **CSRF TOKEN**
+        - **GET CSRF TOKEN :** _GET_
 
 * **PRORFIL** {headers : Authorization} (key token)
     - **UPDATE PROFIL :** _POST_
