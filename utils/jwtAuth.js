@@ -1,4 +1,5 @@
 const jwt = require ('jsonwebtoken');
+const crypto = require('crypto');
 const {findToken} = require('./../services/tokenServices');
 const {msgErr} = require ('./errorsMessages');
 
@@ -7,6 +8,17 @@ const {msgErr} = require ('./errorsMessages');
 function genToken(user){
     const payload = {user: user._id};
     return jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'2h'});
+}
+
+//CSRF Token generator
+function genCSRFToken(){
+    const randomUUID = crypto.randomUUID();
+    const csrfHash = crypto.createHash('sha256').update(randomUUID).digest('hex');
+    const payload = { csrf: csrfHash };
+    return {
+        csrf: csrfHash,
+        token: jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'2h'})
+    };
 }
 
 //Premy Token generator
@@ -60,6 +72,7 @@ async function wssTokenAuth(ws,token){
 
 module.exports = {
     genToken,
+    genCSRFToken,
     genPremyToken,
     verPremyToken,
     wssTokenAuth
