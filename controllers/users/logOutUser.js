@@ -1,4 +1,5 @@
 const {cleanToken,findToken} = require('../../services/tokenServices');
+const {cleanCSRFToken} = require('../../services/tokenCSRFServices');
 const {dbCleanReKey} = require('../../services/pairKeyServices');
 const {dbFindUserId} = require('../../services/userServices');
 const {msgErr} = require('../../utils/errorsMessages');
@@ -6,6 +7,8 @@ const {msgErr} = require('../../utils/errorsMessages');
 module.exports = async (req,res) => {
     
     const userId = req.user;
+    let tokenClean;
+    let CSRFClean;
     
     try{
 
@@ -25,16 +28,12 @@ module.exports = async (req,res) => {
                 .json({messageErr:msgErr.errSession(false)});
 
         //Delete session token
-        const tokenClean = await cleanToken (userId);
+        tokenClean = await cleanToken (userId);
+        //Delete CSRF token
+        CSRFClean = await cleanCSRFToken (userId)
 
         // Clean private re key pass
         await dbCleanReKey(userId);
-
-        if(!tokenClean) 
-            return res
-                .status(500)
-                .json({messageErr:msgErr.errToken});
-
 
         return res
             .status(200)
@@ -44,6 +43,12 @@ module.exports = async (req,res) => {
 
     }catch(err){
         msgErr.errConsole(userId,'LOG OUT ACOUNT', err);
+
+        if(!tokenClean || !CSRFClean) 
+            return res
+                .status(500)
+                .json({messageErr:msgErr.errToken});
+
         return res
             .status(500)
             .json({messageErr:msgErr.errApiInternal});

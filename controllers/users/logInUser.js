@@ -1,6 +1,7 @@
 const {dbFindUserLogIn} = require('../../services/userServices');
 const {setPrivateKey} = require('../../services/pairKeyServices');
 const {saveToken,findToken} = require('../../services/tokenServices');
+const {saveCSRFToken} = require('../../services/tokenCSRFServices');
 const {genToken} = require('../../utils/jwtAuth');
 const {msgErr} = require('../../utils/errorsMessages');
 
@@ -10,6 +11,7 @@ module.exports = async (req,res) => {
     const {email,pswd} = payload;
     let user;
     let tokenSaved;
+    let tokenCSRF;
     let tokenDB;
 
     try{
@@ -36,9 +38,10 @@ module.exports = async (req,res) => {
                 .status(409)
                 .json({messageErr:msgErr.errSession(true)});
         
-        //Generate token
+        //Generate tokens
         const token = genToken(user._id);
         tokenDB = await saveToken(user._id,token);
+        tokenCSRF = await saveCSRFToken(user._id);
 
         //Generate private key
         const keys = await setPrivateKey(user._id)
@@ -49,6 +52,7 @@ module.exports = async (req,res) => {
             .set('Authorization',token)
             .json({
                 user:user.name,
+                tokenCSRF:tokenCSRF.tokenCSRF,
                 soloElPuebloSalvaAlPueblo:{
                     public:keys.publicKey,
                     rpk:keys.reEncryptedPrivateKey,
@@ -69,7 +73,7 @@ module.exports = async (req,res) => {
                 .json({messageErr:msgErr.errCredentialsIncorrect});
 
         //Generate token check
-        if(!tokenDB)
+        if(!tokenDB || !tokenCSRF)
              return res
                 .status(500)
                 .json({messageErr:msgErr.errToken}); 

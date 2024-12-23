@@ -7,6 +7,7 @@ const {dbDeleteKeyDocument,dbCleanReKey} = require('../../services/pairKeyServic
 const {dbRemoveMessages} = require('../../services/messagesServices.js');
 const {deleteImage} = require('../../services/imagesServices');
 const {cleanToken} = require('../../services/tokenServices');
+const {cleanCSRFToken} = require('../../services/tokenCSRFServices.js');
 const {msgErr} = require('../../utils/errorsMessages');
 
 module.exports = async (req,res) => {
@@ -40,6 +41,7 @@ module.exports = async (req,res) => {
             await deleteImage(profile.profilePictureId);
 
         await cleanToken(userId);
+        await cleanCSRFToken(userId);
         await dbDeleteProfile(userId);
         await deleteContactList(userId);
         await dbDeleteProfileExtended(userId);
