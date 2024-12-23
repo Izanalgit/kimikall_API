@@ -271,6 +271,30 @@ async function updateNameOnContacts(userId,newName) {
     }
 }
 
+//Update contacts image profile user
+async function updateImageOnContacts(userId,newImage) {
+    try{
+
+        await Contact.updateMany(
+            { 
+                contacts: { 
+                    $elemMatch: { contactId: userId } 
+                } 
+            },
+            {
+                $set: { "contacts.$[elem].profilePicture": newImage }
+            },
+            {
+                arrayFilters: [ { "elem.contactId": userId } ]
+            }
+        );
+
+    }catch (err){
+        console.error('ERROR : DB-UPDATE IMAGE ON CONTACT USER LIST :',err);
+        throw new Error ('can not update image on contact user list');
+    }
+}
+
 //Update contacts public key user - DEPRECATED
 async function updatePublicKeyOnContacts(userId,newPublicKey) {
     try{
@@ -319,6 +343,7 @@ module.exports = {
     removeContactUser,
     getContactList,
     updateNameOnContacts,
+    updateImageOnContacts,
     updatePublicKeyOnContacts,
     deleteContactList
 }
