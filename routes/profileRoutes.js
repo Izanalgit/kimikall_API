@@ -7,6 +7,7 @@ const deleteImageProfile = require('../controllers/profile/deleteImageProfile');
 const updateProfile = require('../controllers/profile/updateProfile');
 
 const {verifyToken} = require('../middleware/authToken');
+const {verifyCSRFToken} = require('../middleware/csrfToken');
 const {upload} = require('../middleware/uploader');
 
 const {validate} = require('../middleware/validate');
@@ -23,7 +24,7 @@ router.post('/image/:imageType', verifyToken, upload.single('image'), imageProfi
 
 router.get('/delete-image/:imageType', verifyToken, deleteImageProfile);
 
-router.post('/update', verifyToken, profileValidation, validate, updateProfile);
+router.post('/update', verifyToken, verifyCSRFToken, profileValidation, validate, updateProfile);
 
 
 module.exports = router;
